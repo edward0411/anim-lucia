@@ -71,6 +71,7 @@ class Contratos_informacionController extends Controller
 
     public function crear_informacion($id, $id_tipo_contrato)
     {
+       
         $id_contrato = Crypt::decryptString($id);
 
         $dependencias = parametricas::getFromCategory('contratos.dependencia');

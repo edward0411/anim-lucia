@@ -7,19 +7,17 @@ use App\Models\Contratos as contratos;
 use App\Models\Contratos_fechas as contratos_fechas;
 use App\Models\Contratos_polizas as contratos_polizas;
 use App\Models\Contratos_polizas_amparos as contratos_polizas_amparos;
-
 use Auth;
 use Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Parametricas as parametricas;
+use App\Traits\Contratos as t_contratos;
 
 
 class Contratos_polizasController extends Controller
 {
-
-
-
+    use t_contratos;
 
     public function get_info_por_contrato(Request $request)
     {
@@ -42,9 +40,6 @@ class Contratos_polizasController extends Controller
 
     public function delete_info_polizas(Request $request)
     {
-
-        //$id_cdr=Crypt::decryptString($cdr_token);
-
         $contratos_polizas = contratos_polizas::find($request->id_contrato);
         $contratos_polizas->deleted_by = Auth::user()->id;
         $contratos_polizas->delete();
@@ -64,6 +59,8 @@ class Contratos_polizasController extends Controller
 
         // $info_contra = informacion_contractuals::all();
         $contratos_polizas->delete();
+
+        $this->UpdateDateInitial($request->id_contrato);
         $respuesta['status'] = "success";
         $respuesta['message'] = "Se ha eliminado registro";
         $respuesta['objeto'] = $contratos_polizas;
@@ -75,7 +72,6 @@ class Contratos_polizasController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request);
         $consulta = contratos_polizas::where('id_contrato',$request->id_contrato)->first(); 
 
         $rules = [
@@ -100,7 +96,7 @@ class Contratos_polizasController extends Controller
         if ($request->poliza_fecha_aprobacion < $fecha_firma) {
             $rules['poliza_fecha_aprobacion2'] = 'required';
             $messages['poliza_fecha_aprobacion2.required'] ='La fecha aprobación no puede ser inferior a la fecha de la firma del contrato.';          
-          }
+        }
           
           $this->validate($request, $rules, $messages);
 
@@ -116,6 +112,8 @@ class Contratos_polizasController extends Controller
         $contrato_poliza->observaciones= $request->poliza_observaciones;
         $contrato_poliza->updated_by = Auth::user()->id;                        
         $contrato_poliza->save();
+
+        $this->UpdateDateInitial($request->id_contrato);
 
 
         $respuesta['status'] = "success";

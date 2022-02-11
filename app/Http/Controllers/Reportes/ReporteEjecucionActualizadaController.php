@@ -69,20 +69,15 @@ class ReporteEjecucionActualizadaController extends Controller
             ->select(DB::raw('sum(porcentaje_programado) as programado'),DB::raw('sum(porcentaje_ejecutado) as ejecutado'),DB::raw('max(updated_at) as fecha_actualizacion'))
             ->get();
 
-           // dd($datos);
-
             $value->avance_actividad_programado = $datos[0]->programado;
             $value->avance_actividad_ejecutado = $datos[0]->ejecutado;
             $value->fecha_actualizacion = $datos[0]->fecha_actualizacion;
 
          }
-         // dd($search );
 
         $proyectos = proyectos::select('id','nombre_proyecto')
         ->whereNull('deleted_at')
         ->get();
-
-        //dd($search);
    
          return view('reportes.reporte_ejecucion_actualizada.index',compact('proyectos','search'));
 
