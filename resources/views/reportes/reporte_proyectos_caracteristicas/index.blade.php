@@ -65,7 +65,7 @@
                             <th>Estado del proyecto</th>
                             <th>Nombre característica</th>
                             <th>Detalle</th>
-                            <th>subdirección</th>
+                            <th>Subdirección</th>
                             <th>Fecha generación del reporte</th>
                         </tr>
                         </thead>

@@ -71,6 +71,7 @@ class Contratos_informacionController extends Controller
 
     public function crear_informacion($id, $id_tipo_contrato)
     {
+       
         $id_contrato = Crypt::decryptString($id);
 
         $dependencias = parametricas::getFromCategory('contratos.dependencia');
@@ -616,13 +617,8 @@ class Contratos_informacionController extends Controller
 
     public function get_info_contrato(Request $request)
     {
+        $Contratos = Contratos::where('id', $request->id_contrato)->get();
 
-        //$id_cdr=Crypt::decryptString($cdr_token);
-
-        $Contratos = Contratos::where('id', $request->id_contrato)
-            ->get();
-
-        // $info_contra = informacion_contractuals::all();
         return response()->json($Contratos);
     }
 

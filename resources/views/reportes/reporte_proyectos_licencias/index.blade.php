@@ -51,7 +51,7 @@
                             <th>Nombre Proyecto Principal</th>
                             <th>ID_Fase</th>
                             <th>Nombre de la Fase</th>
-                            <th>Estado</th>
+                            <th>Estado de la Fase</th>
                             <th>Tipo de Fase</th>
                             <th>Estado Licencia</th>
                             <th>Tipo Licencia</th>

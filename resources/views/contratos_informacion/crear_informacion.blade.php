@@ -376,7 +376,7 @@ $vars=[ 'breadcrum' => ['Contractual','Informacion contractual'],
                                         <div class="form-group">
                                             <label>Fecha de terminación</label>
                                             <input type="date" name="fecha_terminacion" id="fecha_terminacion" class="form-control" placeholder=""
-                                                value="{{$contratos_fechas->fecha_terminacion ?? ''}}" readonly>
+                                                value="{{$contratos_fechas->fecha_terminacion ?? ''}}" >
                                         </div>
                                     </div>
                                     <div class="col-md-4 ">
@@ -657,9 +657,9 @@ function deletesCell(e) {
 function HabilitarInput(element,element2){
 
     if ($(element).is(":checked")) {
-        $(element2).attr("disabled", true);
+        $(element2).attr("readonly", true);
     }else {
-        $(element2).attr("disabled", false);
+        $(element2).attr("readonly", false);
     }
 }
 

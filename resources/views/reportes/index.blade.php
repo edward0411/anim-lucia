@@ -27,7 +27,7 @@
                   <div class="info-box-content">
                    
                   @can('reportes.listado_reportes.consulta_seguimiento_proyecto.ver')
-                  <a href="{{route('informe_seguimiento_proyectos.informe_seguimiento_index')}}" class="btn btn-outline-primary btn-sm btn-block">Ficha Proyecto <i class="fas fa-arrow-circle-right"></i></a>
+                  <a href="{{route('informe_seguimiento_proyectos.informe_seguimiento_index')}}" class="btn btn-outline-primary btn-sm btn-block">Ficha Proyecto<i class="fas fa-arrow-circle-right"></i></a>
                   @endcan 
                   @can('reportes.listado_reportes.reporte_proyectos_fases.ver')
                   <a href="{{route('reportes.reporte_proyectos_fases.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte Programación Proyectos <i class="fas fa-arrow-circle-right"></i></a>
@@ -50,8 +50,8 @@
                   <a href="{{route('reportes.reporte_proyectos_convenios.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte de proyectos convenios <i class="fas fa-arrow-circle-right"></i></a>
                   @endcan
                     
-                  <a href="{{route('reportes.reporte_avance_ejecucion.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte de programación y ejecución general de actividades<i class="fas fa-arrow-circle-right"></i></a>
-                  <a href="{{route('reportes.reporte_ejecucion_actualizada.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte de programación y ejecución detallado de actividades<i class="fas fa-arrow-circle-right"></i></a>
+                  <!--<a href="{{route('reportes.reporte_avance_ejecucion.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte de programación y ejecución general de actividades<i class="fas fa-arrow-circle-right"></i></a> Dar de baja autorizado por Carlos Neysa 10-02-2022-->
+                  <a href="{{route('reportes.reporte_ejecucion_actualizada.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte de programación y ejecución de actividades<i class="fas fa-arrow-circle-right"></i></a>
                   <a href="{{route('reportes.reporte_proyectos_licencias.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte proyectos licencias <i class="fas fa-arrow-circle-right"></i></a>
                   <a href="{{route('reportes.informe_supervision.index')}}" class="btn btn-outline-primary btn-sm btn-block">Informe de seguimiento proyectos<i class="fas fa-arrow-circle-right"></i></a>
                    

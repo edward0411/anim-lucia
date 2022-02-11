@@ -46,21 +46,26 @@
                     <table id="tabledata" class="table table-bordered table-striped" style="width: 100%;">
                         <thead class="thead-light">
                         <tr>
-                            <th>ID_Fase</th>
+                            <th>Id Proyecto Principal</th>
+                            <th>Nombre Proyecto Principal</th>
+                            <th>Id Fase</th>
                             <th>Nombre de la Fase</th>
                             <th>Tipo de Fase</th>
                             <th>Objeto de la Fase</th>
                             <th>Estado de la Fase</th>
+                            <th>Id Etapa</th>
                             <th>Nombre Etapa</th>
                             <th>Frecuencia Etapa </th>
                             <th>Fecha Inicio Etapa</th>
                             <th>Fecha Fin Etapa</th>
                             <th>% Acumulado Programado Etapa</th>
                             <th>% acumulado Ejecutado Etapa</th>
+                            <th>Id Hito</th>
                             <th>Nombre Hito</th>
                             <th>% Acumulado Programado Hito</th>
                             <th>% Acumulado Ejecutado Hito</th>
-                            <th>Nombre de la actividad</th>
+                            <th>Id Actividad</th>
+                            <th>Nombre actividad</th>
                             <th>Fecha inicio de la actividad</th>
                             <th>Fecha fin de la actividad</th>
                             <th>% Acumulado Programado Actividad</th>
@@ -74,20 +79,25 @@
                             @if(count($search) > 0)
                             @foreach($search as $busqueda)
                             <tr>
+                                <td>{{$busqueda->id_proyecto_principal}}</td>
+                                <td>{{$busqueda->nombre_proyecto_principal}}</td>
                                 <td>{{$busqueda->id_fase}}</td>
                                 <td>{{$busqueda->nombre_fase}}</td>
                                 <td>{{$busqueda->tipo_fase}}</td>
                                 <td>{{$busqueda->objeto_proyecto}}</td>
                                 <td>{{$busqueda->estado_fase}}</td>
+                                <td>{{$busqueda->id_etapa}}</td>
                                 <td>{{$busqueda->nombre_etapa}}</td>
                                 <td>{{$busqueda->frecuencia_fase}}</td>
                                 <td>{{$busqueda->fecha_inicio}}</td>
                                 <td>{{$busqueda->fecha_fin}}</td>
                                 <td>{{round($busqueda->etapa_programado,2)}} %</td>
                                 <td>{{round($busqueda->etapa_ejecutado,2)}} %</td>
+                                <td>{{$busqueda->id_hito}}</td>
                                 <td>{{$busqueda->nombre_hito}}</td>
                                 <td>{{round($busqueda->avance_hito_programado,2)}} %</td>
                                 <td>{{round($busqueda->avance_hito_ejecutado,2)}} %</td>
+                                <td>{{$busqueda->id_actividad}}</td>
                                 <td>{{$busqueda->nombre_actividad}}</td>
                                 <td>{{$busqueda->fecha_inicio_actividad}}</td>
                                 <td>{{$busqueda->fecha_fin_actividad}}</td>

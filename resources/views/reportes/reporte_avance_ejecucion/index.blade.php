@@ -67,7 +67,6 @@ $vars=[ 'breadcrum' => ['Reportes','Reporte de programación y ejecución genera
                                         <td>{{ number_format($item['peso_porcentual_etapa'], 2) }}%</td>
                                         <td>{{ number_format($item['programado_hito'], 2) }}%</td>
                                         <td>{{ number_format($item['ejecutado_hito'], 2) }}%</td>
-
                                         <td>{{ $item['id_actividad'] }}</td>
                                         <td>{{ $item['nombre_actividad'] }}</td>
                                         <td>{{ number_format($item['peso_porcentual_hito'], 2) }}%</td>
@@ -82,9 +81,6 @@ $vars=[ 'breadcrum' => ['Reportes','Reporte de programación y ejecución genera
                                                 echo $hoy
                                             @endphp
                                         </td>
-
-                                       
-                                       
                                     </tr>
                                 @endforeach
                             @endif
