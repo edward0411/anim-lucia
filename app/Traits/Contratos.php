@@ -19,40 +19,48 @@ trait Contratos
     {
         $contrato = m_contratos::find($id);
         $fechas = $contrato->contratos_fechas()->first();
+        
         $array_fechas = [];
+        $array_fechas_polizas = [];
 
         $polizas = Contratos_polizas::where('id_contrato',$id)->get();
 
-        if ($fechas->requiere_acta_inicio == 1) {
-           $contrato_fechas = Contratos_fechas::where('id_contrato',$id)->first();
-           $contrato_fechas->fecha_inicio = $fechas->fecha_acta_inicio;
-           $contrato_fechas->save();
-        }else{
-            $fecha_firma = $fechas->fecha_firma;
-            if ($fechas->fecha_firma != null) {
-                array_push($array_fechas,$fechas->fecha_firma);
-            }
-            if ($fechas->requiere_arl != null) {
-                array_push($array_fechas,$fechas->fecha_arl);
-            }
-
-            if (count($polizas) > 0) {
-               foreach ($polizas as $poliza) {
-                    array_push($array_fechas,$poliza->fecha_aprobacion);
-               }
+        if ($fechas != null) {
+            if ($fechas->requiere_acta_inicio == 1) {
+               $contrato_fechas = Contratos_fechas::where('id_contrato',$id)->first();
+               $contrato_fechas->fecha_inicio = $fechas->fecha_acta_inicio;
+               $contrato_fechas->save();
+            }else{
+                $fecha_firma = $fechas->fecha_firma;
+                if ($fechas->fecha_firma != null) {
+                    array_push($array_fechas,$fechas->fecha_firma);
+                }
+                if ($fechas->requiere_arl != null) {
+                    array_push($array_fechas,$fechas->fecha_arl);
+                }
+    
+                if (count($polizas) > 0) {
+                   foreach ($polizas as $poliza) {
+                        array_push($array_fechas_polizas,$poliza->fecha_aprobacion);
+                   }
+                   sort($array_fechas_polizas, SORT_STRING);
+                   $fecha_poliza = reset($array_fechas_polizas);
+                   array_push($array_fechas,$fecha_poliza);
+                }
+    
+                sort($array_fechas, SORT_STRING);
+    
+                if (count($array_fechas) > 0) {
+                    $fecha_inicio = end($array_fechas);
+    
+                    $contrato_fechas = Contratos_fechas::where('id_contrato',$id)->first();
+                    $contrato_fechas->fecha_inicio =  $fecha_inicio;
+                    $contrato_fechas->save();
+                }  
             }
         }
 
-        sort($array_fechas, SORT_STRING);
-
-        $fecha_inicio = end($array_fechas);
-
-        $contrato_fechas = Contratos_fechas::where('id_contrato',$id)->first();
-        $contrato_fechas->fecha_inicio =  $fecha_inicio;
-        $contrato_fechas->save();
 
         return true;
-
-
     }
 }

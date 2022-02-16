@@ -19,6 +19,9 @@ use App\Models\Plantilla_plan_subnivel as plantilla_plan_subnivel;
 use App\Models\Plantilla_plan_patrimonio as plantilla_plan_pat;
 use App\Models\Plantilla_plan_nivel_patrimonio as plantilla_plan_nivel_pat;
 use App\Models\Plantilla_plan_subnivel_patrimonio as plantilla_plan_subnivel_pat;
+use App\Models\Uv_valor_cdr;
+use App\Models\Uv_valor_rp;
+use App\Models\Uv_valor_pagado_rp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -333,14 +336,22 @@ class PatrimoniosController extends Controller
 
     public function get_infocuenta_por_patrimonio(Request $request)
     {
-
-
         $cuentas = patrimonios_cuentas::where('id_patrimonio', $request->id_patrimonio)
             ->get();
 
         foreach ($cuentas as $cuenta) {
+
+            $valor_cdr = Uv_valor_cdr::select('valor_cdr')->where('id_cuenta',$cuenta->id)->first();
+            $cuenta['valor_cdr'] = $valor_cdr->valor_cdr;
+            $valor_rp = Uv_valor_rp::select('valor_rp')->where('id_cuenta',$cuenta->id)->first();
+            $cuenta['valor_rp'] = $valor_rp->valor_rp;
+            $cuenta['cdr_x_rp'] = $valor_cdr->valor_cdr - $valor_rp->valor_rp;
+            $valor_pagado_rp = Uv_valor_pagado_rp::select('valor_pagado')->where('id_cuenta',$cuenta->id)->first();
+            $cuenta['valor_pagado_rp'] = $valor_pagado_rp->valor_pagado;
+            $cuenta['valor_rp_x_pagar'] = $valor_rp->valor_rp - $valor_pagado_rp->valor_pagado;
             $sumatoria = $cuenta->get_saldo_cuenta();
             $cuenta['valor_cuenta'] = $sumatoria;
+            $cuenta['disponible_convenio'] = $sumatoria - $valor_cdr->valor_cdr;
             $movimento = $cuenta->get_movimento_cuenta();
             $redimiento = $cuenta->get_redimiento_cuenta();
             $cuenta['valor_movimiento'] = $movimento;

@@ -276,6 +276,7 @@ class ProyectosApiController extends Controller
     
     public function get_reporte_tabla(string $table)
     {
+        ini_set('memory_limit', '-1');
         //$actualizacion_estado = DB::select('call usp_contratos_fecha_actualizar_estado_contrato()');
         $results = DB::select("SELECT count(*) as cuenta FROM information_schema.tables where table_type in ('BASE TABLE','VIEW') and table_name = ?",array($table));
 

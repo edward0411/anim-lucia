@@ -27,9 +27,8 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonios'],
                 <table id="tabledata1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Nombre del PAD</th>
-                            <th>Código Interno PAD</th>
                             <th>Código Id PAD</th>
+                            <th>Nombre del PAD</th>
                             <th>Valor del PAD</th>
                             <th>Acciones</th>
                         </tr>
@@ -37,9 +36,8 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonios'],
                     <tbody>
                         @foreach($patrimonios as $patrimonio)
                             <tr>
-                                <td>{{$patrimonio['numero_contrato']}}</td>
-                                <td>{{$patrimonio['codigo_pad']}}</td>
                                 <td>{{$patrimonio['codigo_fid']}}</td>
+                                <td>{{$patrimonio['numero_contrato']}}</td>
                                 <td>${{number_format($patrimonio->saldo_patrimonio())}}</td>
                                 <td nowrap>
                                 <div class="row flex-nowrap">

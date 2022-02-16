@@ -61,6 +61,7 @@ class Contratos_polizasController extends Controller
         $contratos_polizas->delete();
 
         $this->UpdateDateInitial($request->id_contrato);
+        
         $respuesta['status'] = "success";
         $respuesta['message'] = "Se ha eliminado registro";
         $respuesta['objeto'] = $contratos_polizas;

@@ -90,7 +90,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                             <div class="form-group">
                                                 <label>Valor del convenio *</label>
                                                 @if($id_contrato == 0)
-                                                <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" >
+                                                <input type="text" name="valor_contrato" onkeypress="return CheckNumeric()"  onkeyup="FormatCurrency(this)" id="valor_contrato" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" >
                                                 @else
                                                 <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value="$ {{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" disabled>
                                                 @endif
@@ -754,6 +754,34 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
 
         <script type="text/javascript">
+
+        function FormatCurrency(ctrl) {
+            //Check if arrow keys are pressed - we want to allow navigation around textbox using arrow keys
+            if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+                return;
+            }
+
+            var val = ctrl.value;
+
+            val = val.replace(/,/g, "")
+            ctrl.value = "";
+            val += '';
+            x = val.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+
+            var rgx = /(\d+)(\d{3})/;
+
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+
+            ctrl.value = x1 + x2;
+        }
+
+        function CheckNumeric() {
+            return event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode == 46;
+        }
 
             function HabilitarInput(element,element2){
 
