@@ -443,7 +443,6 @@ function traerCuentas(){
         var total_x_pagar = 0;
 
          $.each(respuesta, function(index, elemento) {
-            console.log(elemento)
             total_asignado = total_asignado + parseFloat(elemento.valor_asignado);
             total_mov = total_mov + elemento.valor_movimiento;
             total_pendiente = total_pendiente + elemento.valor_pendiente;

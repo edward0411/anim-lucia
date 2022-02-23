@@ -336,8 +336,7 @@ class PatrimoniosController extends Controller
 
     public function get_infocuenta_por_patrimonio(Request $request)
     {
-        $cuentas = patrimonios_cuentas::where('id_patrimonio', $request->id_patrimonio)
-            ->get();
+        $cuentas = patrimonios_cuentas::where('id_patrimonio', $request->id_patrimonio)->get();
 
         foreach ($cuentas as $cuenta) {
 
@@ -349,14 +348,14 @@ class PatrimoniosController extends Controller
             $valor_pagado_rp = Uv_valor_pagado_rp::select('valor_pagado')->where('id_cuenta',$cuenta->id)->first();
             $cuenta['valor_pagado_rp'] = $valor_pagado_rp->valor_pagado;
             $cuenta['valor_rp_x_pagar'] = $valor_rp->valor_rp - $valor_pagado_rp->valor_pagado;
-            $sumatoria = $cuenta->get_saldo_cuenta();
-            $cuenta['valor_cuenta'] = $sumatoria;
-            $cuenta['disponible_convenio'] = $sumatoria - $valor_cdr->valor_cdr;
             $movimento = $cuenta->get_movimento_cuenta();
-            $redimiento = $cuenta->get_redimiento_cuenta();
+            $rendimiento = $cuenta->get_redimiento_cuenta();
             $cuenta['valor_movimiento'] = $movimento;
             $pendiente = $cuenta['valor_asignado'] - $movimento;
-            $cuenta['valor_rendimiento'] = $redimiento;
+            $cuenta['valor_rendimiento'] = $rendimiento;
+            $sumatoria = $cuenta['valor_asignado'] + $rendimiento;
+            $cuenta['valor_cuenta'] = $sumatoria;
+            $cuenta['disponible_convenio'] = $sumatoria - $valor_cdr->valor_cdr;
             $cuenta['valor_pendiente'] = $pendiente;
         }
 
