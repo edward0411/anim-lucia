@@ -18,11 +18,13 @@ use App\Models\Contratos_pads_convenios as pads_convenios;
 use App\Models\Terceros_cuentas_bancarias as terceros_cuentas_bancarias;
 use Illuminate\Support\Facades\Redirect;
 
+use App\Traits\Contratos as t_contratos;
 use Illuminate\Support\Facades\Crypt;
 use Auth;
 
 class Contratos_informacionController extends Controller
 {
+    use t_contratos;
 
     public function index_convenios()
     {
@@ -57,7 +59,7 @@ class Contratos_informacionController extends Controller
     public function index_informacion()
     {
         $actualizacion_estado = DB::select('call usp_contratos_fecha_actualizar_estado_contrato()');
-
+       
         $contratos_info = contratos::where('param_valor_tipo_contrato', 3)->get();
         $titulo = 'Contrato';
         $param_valor_tipo_contrato = 3;
@@ -73,6 +75,10 @@ class Contratos_informacionController extends Controller
     {
        
         $id_contrato = Crypt::decryptString($id);
+
+        if ($id_contrato != 0) {
+            $this->UpdateDateInitial($id_contrato);
+        }
 
         $dependencias = parametricas::getFromCategory('contratos.dependencia');
 

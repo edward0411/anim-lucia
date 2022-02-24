@@ -91,7 +91,11 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                                 <label>Valor del convenio *</label>
                                                 
                                                 @if($id_contrato == 0)
+<<<<<<< HEAD
                                                 <input type="text" name="valor_contrato" id="valor_contrato" onkeypress="mascara(this,cpf)"  onpaste="return false" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : 0 }}" >
+=======
+                                                <input type="text" name="valor_contrato" onkeypress="return CheckNumeric()"  onkeyup="FormatCurrency(this)" id="valor_contrato" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" >
+>>>>>>> f5479bdd4db30b476b78617978a35a3e44a04268
                                                 @else
                                                 <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" disabled>
                                                 @endif
@@ -756,6 +760,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
         <script type="text/javascript">
 
+<<<<<<< HEAD
             function mascara(o,f){  
                     v_obj=o;  
                     v_fun=f;  
@@ -788,6 +793,35 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 }
 
 
+=======
+        function FormatCurrency(ctrl) {
+            //Check if arrow keys are pressed - we want to allow navigation around textbox using arrow keys
+            if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+                return;
+            }
+
+            var val = ctrl.value;
+
+            val = val.replace(/,/g, "")
+            ctrl.value = "";
+            val += '';
+            x = val.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+
+            var rgx = /(\d+)(\d{3})/;
+
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+
+            ctrl.value = x1 + x2;
+        }
+
+        function CheckNumeric() {
+            return event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode == 46;
+        }
+>>>>>>> f5479bdd4db30b476b78617978a35a3e44a04268
 
             function HabilitarInput(element,element2){
 

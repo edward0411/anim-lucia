@@ -37,17 +37,17 @@
 
 
   <!-- daterange picker -->
-  <link rel="stylesheet" href="{{ asset("plugins/daterangepicker/daterangepicker.css") }}>
+  <link rel="stylesheet" href="{{ asset("plugins/daterangepicker/daterangepicker.css") }}">
   <!-- iCheck for checkboxes and radio inputs -->
-  <link rel="stylesheet" href="{{ asset("plugins/icheck-bootstrap/icheck-bootstrap.min.css") }}>
+  <link rel="stylesheet" href="{{ asset("plugins/icheck-bootstrap/icheck-bootstrap.min.css") }}">
   
   <!-- Bootstrap Color Picker -->
-  <link rel="stylesheet" href="{{ asset("plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css") }}>
+  <link rel="stylesheet" href="{{ asset("plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css") }}">
   
   
   <!-- Select2 -->
   
-  <link rel="stylesheet" href="{{ asset("plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")}}>
+  <link rel="stylesheet" href="{{ asset("plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css")}}">
   
 
 
@@ -352,6 +352,7 @@
 <script type="text/javascript" language="javascript" src="{{ asset("plugins/datatables-buttons/js/buttons.print.min.js") }}"></script>
 
 <script src="{{ asset("/dist/js/jquery.form.min.js") }}"></script>
+
 
 
 <script type="text/javascript">

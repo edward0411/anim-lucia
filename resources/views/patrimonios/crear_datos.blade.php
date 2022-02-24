@@ -91,7 +91,6 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonio'],
         <div class="card card-primary shadow">
             <div class="card-header">
                 <h3 class="card-title">Cuentas</h3>
-
             </div>
             @canany(['modulo_financiero.patrimonios.cuentas.crear','modulo_financiero.patrimonios.cuentas.editar'])
             <form role="form" method="POST" id="frm_patrimonios_cuentas"  action="{{route('patrimonios.crear_cuenta')}}" target="_blank">
@@ -153,17 +152,23 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonio'],
                 <input type="hidden" name="id_patrimonio_c" id="cuentas_id_patrimonio" class="form-control" value="{{$registro->id}}" >
                 <input type="hidden" name="valor_convenios" id="valor_convenios" class="form-control" value="{{$valor_convenios}}" >
                 <div class="card-body">
-                    <table id="tbl_patrimonios_cuentas" class="table table-bordered table-striped">
+                    <table id="tbl_patrimonios_cuentas" class="table table-bordered table-responsive table-striped">
                         <thead>
                             <tr>
                                 <th>Número de Cuenta</th>
                                 <th>Nombre Cuenta</th>
                                 <th>Tipo de Cuenta</th>
-                                <th style="text-align: right;">Valor Definido Cuenta</th>
-                                <th style="text-align: right;">Valor Pendiente por Recaudar</th>
-                                <th style="text-align: right;">Valor Movimientos</th>
-                                <th style="text-align: right;">Valor Rendimientos</th>
-                                <th style="text-align: right;">Valor Actual PAD</th>
+                                <th style="text-align: right;">Valor Convenio</th>
+                                <th style="text-align: right;">Aportes</th>
+                                <th style="text-align: right;">Por Recibir</th>
+                                <th style="text-align: right;">Rendimientos</th>
+                                <th style="text-align: right;">Total Convenio</th>
+                                <th style="text-align: right;">Disponible Convenio</th>
+                                <th style="text-align: right;">Valor CDRS</th>
+                                <th style="text-align: right;">Valor RP</th>
+                                <th style="text-align: right;">CDR por RP</th>
+                                <th style="text-align: right;">Pagado</th>
+                                <th style="text-align: right;">RP por Pagar</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -174,31 +179,37 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonio'],
                                     TOTALES:
                                 </th>
                                 <th style="text-align: right;">
-                                    <div id="total_asignado">
-
-                                    </div>
+                                    <div id="total_asignado"></div>
                                 </th>
                                 <th style="text-align: right;">
-                                    <div id="total_pendiente">
-
-                                    </div>
+                                    <div id="total_movimientos"></div>
                                 </th>
                                 <th style="text-align: right;">
-                                    <div id="total_movimientos">
-
-                                    </div>
+                                    <div id="total_pendiente"></div>
                                 </th>
                                 <th style="text-align: right;">
-                                    <div id="total_rendimientos">
-
-                                    </div>
+                                    <div id="total_rendimientos"></div>
                                 </th>
                                 <th style="text-align: right;">
-                                    <div id="total_saldo">
-
-                                    </div>
+                                    <div id="total_saldo"></div>
                                 </th>
                                 <th>
+                                    <div id="total_disponible_convenio"></div>
+                                </th>
+                                <th>
+                                    <div id="total_valor_cdr"></div>
+                                </th>
+                                <th>
+                                    <div id="total_valor_rp"></div>
+                                </th>
+                                <th>
+                                    <div id="total_cdr_x_rp"></div>
+                                </th>
+                                <th>
+                                    <div id="total_pagado"></div>
+                                </th>
+                                <th>
+                                    <div id="total_x_pagar"></div>
                                 </th>
                             </tr>
                         </tfoot>
@@ -295,25 +306,50 @@ $vars=[ 'breadcrum' => ['Financiero','Patrimonio'],
 
 <script type="text/javascript">
 
-
-function limpiarFrmBit(){
-    $('#nombre_bitacora').val('');
-    $('#descripcion_bitacora').val('');
-    $('#responsable').val('');
-    $('#observaciones_bitacoras').val('');
-}
-function limpiarFrmCta(){
-    $('#num_cuenta').val('');
-    $('#id_tipo_cuenta').val('');
-    $('#nombre_cuenta').val('');
-    $('#valor_cuenta').val('');
-    $('#observacion').val('');
-}
+    const formatoMoney = (number) => {
+        const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+        const rep = '$1,';
+        let arr = number.toString().split('.');
+        arr[0] = arr[0].replace(exp,rep);
+        return arr[1] ? arr.join('.'): arr[0];
+    }
+        
+    function limpiarFrmBit(){
+        $('#nombre_bitacora').val('');
+        $('#descripcion_bitacora').val('');
+        $('#responsable').val('');
+        $('#observaciones_bitacoras').val('');
+    }
+    function limpiarFrmCta(){
+        $('#num_cuenta').val('');
+        $('#id_tipo_cuenta').val('');
+        $('#nombre_cuenta').val('');
+        $('#valor_cuenta').val('');
+        $('#observacion').val('');
+    }
 
     // Variable Json para guardar la información de la cuentas_id_patrimonio
     var colleccionCuentas = "";
 
-    function adicionarCuenta(id_patrimonio_cuenta = 0, numero_cuenta = '', nombre_cuenta = '',tipo_cuenta = '',valor_movimiento = '',valor_rendimiento = '',saldo = '',asignado = '',pendiente = '') {
+    function adicionarCuenta(
+        id_patrimonio_cuenta = 0, 
+        numero_cuenta = '', 
+        nombre_cuenta = '',
+        tipo_cuenta = '',
+        valor_movimiento = '',
+        valor_rendimiento = '',
+        saldo = '',
+        asignado = '',
+        pendiente = '',
+        disponible_convenio = '',
+        valor_cdr = '',
+        valor_rp = '',
+        cdr_x_rp = '',
+        valor_pagado_rp = '',
+        valor_rp_x_pagar = '',
+        ) {
+
+            
 
        var cell = `
        <tr id="">
@@ -327,20 +363,39 @@ function limpiarFrmCta(){
                `+tipo_cuenta+`
            </td>
            <td style="text-align: right;">
-           $`+Intl.NumberFormat().format(asignado)+`
+           $`+formatoMoney(parseFloat(asignado).toFixed(2))+`
            </td>
            <td style="text-align: right;">
-           $`+Intl.NumberFormat().format(pendiente)+`
+           $`+formatoMoney(parseFloat(valor_movimiento).toFixed(2))+`
            </td>
            <td style="text-align: right;">
-           $`+Intl.NumberFormat().format(valor_movimiento)+`
+           $`+formatoMoney(parseFloat(pendiente).toFixed(2))+`
            </td>
            <td style="text-align: right;">
-           $`+Intl.NumberFormat().format(valor_rendimiento)+`
+           $`+formatoMoney(parseFloat(valor_rendimiento).toFixed(2))+`
            </td>
            <td style="text-align: right;">
-           $`+Intl.NumberFormat().format(saldo)+`
+           $`+formatoMoney(parseFloat(saldo).toFixed(2))+`
            </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(disponible_convenio).toFixed(2))+`
+           </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(valor_cdr).toFixed(2))+`
+           </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(valor_rp).toFixed(2))+`
+           </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(cdr_x_rp).toFixed(2))+`
+           </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(valor_pagado_rp).toFixed(2))+`
+           </td>
+           <td style="text-align: right;">
+           $`+formatoMoney(parseFloat(valor_rp_x_pagar).toFixed(2))+`
+           </td>
+
            <td>
                 @can('modulo_financiero.patrimonios.cuentas.editar')
                 <button type="button" class="btn btn-sm btn-outline-primary" onclick="EditCell_cuenta(`+id_patrimonio_cuenta+`)">Editar</button>
@@ -373,7 +428,6 @@ function traerCuentas(){
     data: datos,
     success: function(respuesta)
      {
-         console.log(respuesta)
         $("#tbl_patrimonios_cuentas tbody").empty();
 
         var total_mov = 0;
@@ -381,22 +435,57 @@ function traerCuentas(){
         var total_saldo = 0;
         var total_asignado = 0;
         var total_pendiente = 0;
+        var total_disponible_convenio = 0;
+        var total_valor_cdr = 0;
+        var total_valor_rp = 0;
+        var total_cdr_x_rp = 0;
+        var total_pagado = 0;
+        var total_x_pagar = 0;
 
          $.each(respuesta, function(index, elemento) {
+            total_asignado = total_asignado + parseFloat(elemento.valor_asignado);
             total_mov = total_mov + elemento.valor_movimiento;
+            total_pendiente = total_pendiente + elemento.valor_pendiente;
             total_rend = total_rend + elemento.valor_rendimiento;
             total_saldo = total_saldo + elemento.valor_cuenta;
-            total_asignado = total_asignado + parseInt(elemento.valor_asignado);
-            total_pendiente = total_pendiente + elemento.valor_pendiente;
-            adicionarCuenta(elemento.id, elemento.numero_de_cuenta  ?? '', elemento.descripcion_cuenta ?? '', elemento.id_param_tipo_cuenta_texto ?? '',elemento.valor_movimiento ?? '',elemento.valor_rendimiento ?? '',elemento.valor_cuenta ?? '',elemento.valor_asignado ?? '',elemento.valor_pendiente ?? '')
+
+            total_disponible_convenio = total_disponible_convenio + (parseFloat(elemento.valor_cuenta) - parseFloat(elemento.valor_cdr));
+            total_valor_cdr = total_valor_cdr + parseFloat(elemento.valor_cdr);
+            total_valor_rp = total_valor_rp + parseFloat(elemento.valor_rp);
+            total_cdr_x_rp = total_cdr_x_rp + parseFloat(elemento.cdr_x_rp);
+            total_pagado = total_pagado + parseFloat(elemento.valor_pagado_rp);
+            total_x_pagar = total_x_pagar + parseFloat(elemento.valor_rp_x_pagar);
+
+            adicionarCuenta(
+                elemento.id, 
+                elemento.numero_de_cuenta  ?? '', 
+                elemento.descripcion_cuenta ?? '', 
+                elemento.id_param_tipo_cuenta_texto ?? '',
+                elemento.valor_movimiento ?? '',
+                elemento.valor_rendimiento ?? '',
+                elemento.valor_cuenta ?? '',
+                elemento.valor_asignado ?? '',
+                elemento.valor_pendiente ?? '',
+                elemento.disponible_convenio ?? '',
+                elemento.valor_cdr ?? '',
+                elemento.valor_rp ?? '',
+                elemento.cdr_x_rp ?? '',
+                elemento.valor_pagado_rp ?? '',
+                elemento.valor_rp_x_pagar ?? '')
             });
             colleccionCuentas = respuesta;
 
-            $('#total_movimientos').html('$'+Intl.NumberFormat().format(total_mov));
-            $('#total_rendimientos').html('$'+Intl.NumberFormat().format(total_rend));
-            $('#total_saldo').html('$'+Intl.NumberFormat().format(total_saldo));
-            $('#total_asignado').html('$'+Intl.NumberFormat().format(total_asignado));
-            $('#total_pendiente').html('$'+Intl.NumberFormat().format(total_pendiente));
+            $('#total_asignado').html('$'+formatoMoney(parseFloat(total_asignado).toFixed(2)));
+            $('#total_movimientos').html('$'+formatoMoney(parseFloat(total_mov).toFixed(2)));
+            $('#total_pendiente').html('$'+formatoMoney(parseFloat(total_pendiente).toFixed(2)));
+            $('#total_rendimientos').html('$'+formatoMoney(parseFloat(total_rend).toFixed(2)));
+            $('#total_saldo').html('$'+formatoMoney(parseFloat(total_saldo).toFixed(2)));
+            $('#total_disponible_convenio').html('$'+formatoMoney(parseFloat(total_disponible_convenio).toFixed(2)));
+            $('#total_valor_cdr').html('$'+formatoMoney(parseFloat(total_valor_cdr).toFixed(2)));
+            $('#total_valor_rp').html('$'+formatoMoney(parseFloat(total_valor_rp).toFixed(2)));
+            $('#total_cdr_x_rp').html('$'+formatoMoney(parseFloat(total_cdr_x_rp).toFixed(2)));
+            $('#total_pagado').html('$'+formatoMoney(parseFloat(total_pagado).toFixed(2)));
+            $('#total_x_pagar').html('$'+formatoMoney(parseFloat(total_x_pagar).toFixed(2)));
         }
     });
 }
