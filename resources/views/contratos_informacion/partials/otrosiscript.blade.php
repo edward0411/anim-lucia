@@ -38,7 +38,7 @@ function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', nume
             `+fecha_firma+`
         </td>
         <td>
-        $`+Intl.NumberFormat().format(valor_adicion)+`           
+        `+addCommas(valor_adicion)+`           
         </td>
         <td>
             `+fecha_terminacion+`
@@ -159,7 +159,7 @@ function EditarOtrosiCell(id)
        if(respuesta.es_adicion == 1){
         $("#chk_otrosi_adicion").prop("checked", true); 
         $("#chk_otrosi_adicion").show(); 
-        $("#otrosi_valor_adicion").val(respuesta.valor_adicion);
+        $("#otrosi_valor_adicion").val(addCommas(respuesta.valor_adicion));
         $("#otrosi_id_cdr").val(respuesta.id_cdr_otrosi);
 
        }
@@ -257,7 +257,7 @@ function traerOtrosis(){
                  
                 adicionarSuspensiones(elemento.id, elemento.numero_otrosi ?? '',elemento.fecha_firma ?? '',elemento.suspension_fecha_inicio ?? '',elemento.suspension_fecha_fin ?? '',tiempo_meses_dias,elemento.nueva_fecha_terminacion ?? '')
             } else {
-                adicionarModificaciones(elemento.id, tipo_otrosi_view ?? '' , elemento.numero_otrosi ?? '',elemento.fecha_firma ?? '',elemento.valor_adicion ?? '',elemento.nueva_fecha_terminacion ?? '',elemento.detalle_modificacion ?? '')
+                adicionarModificaciones(elemento.id, tipo_otrosi_view ?? '' , elemento.numero_otrosi ?? '',elemento.fecha_firma ?? '',addCommas(elemento.valor_adicion ?? ''),elemento.nueva_fecha_terminacion ?? '',elemento.detalle_modificacion ?? '')
             }
             });
         tablacdr;

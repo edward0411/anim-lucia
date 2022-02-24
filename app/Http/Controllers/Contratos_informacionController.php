@@ -263,7 +263,9 @@ class Contratos_informacionController extends Controller
 
     public function store_informacion(Request $request)
     {
-       //dd($request);
+        $valor_contrato=$request->valor_contrato;
+        $valor_contrato=str_replace(',','',$valor_contrato); 
+    
 
         switch ($request->tipo_contrato) {
             case 1:
@@ -341,7 +343,7 @@ class Contratos_informacionController extends Controller
                 $cdr = cdrs::find($request->id_cdr);
                 $suma = $cdr->saldo_cdr();
                 //dd($request);
-                if ($request->valor_contrato > $suma) {
+                if ($valor_contrato > $suma) {
                     return Redirect::back()->withInput()->withErrors(["error_maximo" => "el valor del contrato no debe superar el valor del CDR"]);
                 }
 
@@ -368,7 +370,7 @@ class Contratos_informacionController extends Controller
         if (($request->tipo_contrato == 1) || ($request->tipo_contrato == 3)) {
             $contratos->numero_convenio = $request->numero_convenio;
         }
-        $contratos->valor_contrato = $request->valor_contrato;
+        $contratos->valor_contrato = $valor_contrato;
         $contratos->id_cdr = $request->id_cdr;
         $contratos->objeto_contrato = $request->objeto_contrato;
         $contratos->ruta_secop = $request->ruta_secop;

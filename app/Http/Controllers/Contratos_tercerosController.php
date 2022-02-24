@@ -104,7 +104,9 @@ class Contratos_tercerosController extends Controller
     
     public function storePartesConvenio(Request $request )
     {
-        //dd($request);
+   // dd($request);
+        $valor_aporte=$request->valor_entidad;
+        $valor_aporte=str_replace(',','',$valor_aporte);
         
         $array_id_entidad = $request->id_entidad;
         $array_unique = array_unique($array_id_entidad);
@@ -137,7 +139,7 @@ class Contratos_tercerosController extends Controller
                         $contratos_tercero->id_contrato = $request->id_contrato;
 
                         $contratos_tercero->id_terecero = $request->id_entidad[$key];
-                        $contratos_tercero->valor_aporte= $request->valor_entidad[$key];
+                        $contratos_tercero->valor_aporte= $valor_aporte[$key];
                         
                         $tercero = terceros::find($request->id_entidad[$key]);
 

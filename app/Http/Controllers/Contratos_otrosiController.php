@@ -70,6 +70,9 @@ class Contratos_otrosiController extends Controller
     public function store(Request $request)
     {
 
+        $otrosi_valor_adicion=$request->otrosi_valor_adicion;
+        $otrosi_valor_adicion=str_replace(',','',$otrosi_valor_adicion);
+
         $rules = [
             'numero_otrosi' => 'required',
             'otrosi_fecha_firma' => 'required',
@@ -177,16 +180,19 @@ class Contratos_otrosiController extends Controller
               }
         }
 
-        if($request->otrosi_valor_adicion != null){
-            $valor = $contrato->valor_contrato + $request->otrosi_valor_adicion;
+        if($otrosi_valor_adicion != null){
+            $valor = $contrato->valor_contrato + $otrosi_valor_adicion;
             if($valor < 0){
                 $rules['id_contrato8'] = 'required';
                 $messages['id_contrato8.required'] ='El valor de la disminución no puede ser mayor al valor del contrato.'; 
             }
         }
 
+      // dd($request->otrosi_es_adicion);
+
         if (isset($request->otrosi_es_adicion)) {
-            if (($request->otrosi_valor_adicion == null) || ($request->otrosi_valor_adicion == 0)) {
+            if (((int)$otrosi_valor_adicion == null) || ((int)$otrosi_valor_adicion == 0)) {
+                
                 $rules['id_contrato9'] = 'required';
                 $messages['id_contrato9.required'] ='El valor de la adición ó disminución no puede ser 0 ó vacio.';
             }
@@ -200,10 +206,10 @@ class Contratos_otrosiController extends Controller
                 if ($request->id_otrosi != 0) {
 
                    $valor_otrosi_old = contratos_otrosi::where('id', $request->id_otrosi)->select('valor_adicion')->first();
-                   $valor_aumento = ($valor_contrato - $valor_otrosi_old->valor_adicion) + $request->otrosi_valor_adicion;
+                   $valor_aumento = ($valor_contrato - $valor_otrosi_old->valor_adicion) + $otrosi_valor_adicion;
                   
                 }else{
-                    $valor_aumento = $valor_contrato + $request->otrosi_valor_adicion;
+                    $valor_aumento = $valor_contrato + $otrosi_valor_adicion;
                 }
         
                 if ($valor_aumento > $valor_cdr) {
@@ -277,7 +283,7 @@ class Contratos_otrosiController extends Controller
                 $valor_otrosi_old =  $contratos_otrosi->valor_adicion;
             }
 
-            $contratos_otrosi->valor_adicion  = $request->otrosi_valor_adicion;
+            $contratos_otrosi->valor_adicion  = $otrosi_valor_adicion;
             $contratos_otrosi->id_cdr_otrosi  = $request->otrosi_id_cdr;
 
         

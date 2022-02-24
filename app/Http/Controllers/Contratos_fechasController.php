@@ -30,6 +30,9 @@ class Contratos_fechasController extends Controller
     {
         //dd($request);
 
+        $valor_inicial=$request->valor_inicial;
+        $valor_inicial=str_replace(',','',$valor_inicial); 
+
         $request->validate([
             'fecha_firma' => 'required',
             'id_contrato' => 'required',
@@ -178,8 +181,8 @@ class Contratos_fechasController extends Controller
         $contratos_fechas->fecha_terminacion = $fechaTermincacionCalculada;
         $contratos_fechas->fecha_terminacion_actual  = $fechaTermincacionCalculada;
 
-        $contratos_fechas->valor_inicial  = $request->valor_inicial;
-        $contratos_fechas->valor_actual  = $request->valor_inicial;
+        $contratos_fechas->valor_inicial  = $valor_inicial;
+        $contratos_fechas->valor_actual  = $valor_inicial;
 
         $contratos_fechas->requiere_liquidacion  = $request->requiere_liquidacion;
 

@@ -74,8 +74,8 @@
                         <div class="col-md-4 col-lg-3">
                             <div class="form-group">
                                 <label for="">Valor adición</label>
-                                <input type="text" name="otrosi_valor_adicion" id="otrosi_valor_adicion" value=""
-                                    class="form-control">
+                                <input type="text" name="otrosi_valor_adicion" id="otrosi_valor_adicion" value="" onkeypress="mascara(this,cpf)"
+                                    class="form-control text-right">
                             </div>
                         </div>
                         @if($contratos->param_valor_tipo_contrato == 3)
