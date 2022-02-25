@@ -78,7 +78,7 @@ $vars=[ 'breadcrum' => ['Contractual','Informacion contractual'],
                                     <div class="col-md-4 ">
                                         <div class="form-group">
                                             <label><b>Valor del contrato</b></label>
-                                            <p>{{number_format((float) $contratos[0]->valor_contrato, 2, '.', ',')}}
+                                            <p>$ {{number_format((float) $contratos[0]->valor_contrato, 2, '.', ',')}}
                                             </p>
                                         </div>
                                     </div>
@@ -286,7 +286,7 @@ $vars=[ 'breadcrum' => ['Contractual','Informacion contractual'],
                                         <div class="form-group">
                                             <label><b>Valor inicial</b></label>
                                             @if($contratos_fechas != null)
-                                            <p>{{number_format((float) $contratos_fechas->valor_inicial, 2, '.', '')}}
+                                            <p>$ {{number_format((float) $contratos_fechas->valor_inicial, 2, '.', ',')}}
                                                 @endif
                                             </p>
                                         </div>
@@ -295,7 +295,7 @@ $vars=[ 'breadcrum' => ['Contractual','Informacion contractual'],
                                         <div class="form-group">
                                             <label><b>Valor actual</b></label>
                                             @if($contratos_fechas != null)
-                                            <p>{{number_format((float) $contratos_fechas->valor_actual, 2, '.', '')}}
+                                            <p>$ {{number_format((float) $contratos_fechas->valor_actual, 2, '.', ',')}}
                                                 @endif
                                             </p>
                                         </div>
@@ -562,15 +562,6 @@ $vars=[ 'breadcrum' => ['Contractual','Informacion contractual'],
                 <!-- /.collapseOne-->
             </div>
             <!-- /.card-->
-
-
-
-
-
-
-
-
-
         </div>
         <!-- /.accordion -->
     </div>
@@ -595,8 +586,6 @@ function llenarTerceros(name) {
 
 }
 
-
-
 function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', numero_otrosi = '',fecha_firma = '',valor_adicion = '',fecha_terminacion = '',modificacion = '') {
        
        var cell = `
@@ -611,7 +600,7 @@ function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', nume
                `+fecha_firma+`
            </td>
            <td style="float:right;">
-            $`+Intl.NumberFormat().format(valor_adicion)+` 
+            $ `+addCommas(valor_adicion)+` 
            </td>
            <td>
                `+fecha_terminacion+`
@@ -654,8 +643,6 @@ function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', nume
 
       $("#tbl_suspensiones tbody").append(cell);
   }
-
-
 
    function traerOtrosis(){
 
@@ -701,9 +688,18 @@ function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', nume
        });
        //return false;
        }
-
-
     traerOtrosis();
+    function addCommas(nStr){
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+                }
 
 </script>
 

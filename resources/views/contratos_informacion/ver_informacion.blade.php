@@ -129,7 +129,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                         @foreach($listaterceros as $terceros)
                                         <tr>
                                             <td>{{$terceros->identificacion}}-{{$terceros->nombre}}</td>
-                                            <td>{{number_format((float) $terceros->valor_aporte, 2, '.', '')}}</td>
+                                            <td>${{number_format($terceros->valor_aporte, 2)}}</td>
                                         </tr>
                                         @endforeach
 
@@ -225,7 +225,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                     <div class="form-group">
                                         <label><b>Valor inicial</b></label>
                                         @if($contratos_fechas != null)
-                                        <p>{{number_format((float) $contratos_fechas->valor_inicial, 2, '.', '')}}
+                                        <p>${{number_format($contratos_fechas->valor_inicial, 2)}}
                                             @endif
                                     </div>
 
@@ -234,7 +234,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                     <div class="form-group">
                                         <label><b>Valor actual</b></label>
                                         @if($contratos_fechas != null)
-                                        <p>{{number_format((float) $contratos_fechas->valor_actual, 2, '.', '')}}
+                                        <p>${{number_format($contratos_fechas->valor_actual, 2)}}
                                             @endif
                                     </div>
 
@@ -618,7 +618,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                `+fecha_firma+`
            </td>
            <td>
-               `+valor_adicion+`
+              $ `+addCommas(valor_adicion)+`
            </td>
            <td>
                `+fecha_terminacion+`
@@ -711,6 +711,17 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
 
     traerOtrosis();
+    function addCommas(nStr){
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+                }
 
     </script>
 

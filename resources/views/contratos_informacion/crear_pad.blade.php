@@ -85,7 +85,8 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Valor del PAD *</label>
-                                                    <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? $contratos->valor_contrato : '') }}">
+                                                    <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" onfocus="myFunction()" onkeypress="mascara(this,cpf)"  onpaste="return false"
+                                                     value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato,2) : '') }}">
                                                
                                             </div>
                                         </div>
@@ -218,7 +219,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Fecha de terminación *</label>
                                                     <input type="date" name="fecha_terminacion" id="fecha_terminacion"
@@ -226,7 +227,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                                         value="{{ $contratos_fechas->fecha_terminacion ?? '' }}" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Fecha de terminación actual</label>
                                                     <input type="date" name="fecha_terminacion_actual"
@@ -235,20 +236,21 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                                         disabled="disabled">
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Valor inicial</label>
-                                                    <input type="number" step="0.01" name="valor_inicial" id="valor_inicial"
-                                                        class="form-control"
-                                                        value="{{ number_format($contratos_fechas->valor_inicial ?? ($contratos->valor_contrato ?? 0), 2, '.', '') }}"
+                                                    <input type="text" step="0.01" name="valor_inicial" id="valor_inicial"
+                                                        class="form-control text-right" onkeypress="mascara(this,cpf)"
+                                                        value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato,2) : '') }}"
+                                                       
                                                         required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Valor actual</label>
                                                     <input type="text" name="valor_actual" id="valor_actual"
-                                                        class="form-control" placeholder=""
+                                                        class="form-control text-right" placeholder=""
                                                         value="{{ number_format($contratos_fechas->valor_actual ?? ($contratos->valor_contrato ?? 0), 2, '.', '') }}"
                                                         required readonly>
                                                 </div>
@@ -421,6 +423,63 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
         //     $("#addElement").click(function() { adcionarElemento();
         //     $("#addSupervisor").click(function() { addSupervisor();
         //     });
+
+       function myFunction(){
+        var value;
+        value = document.getElementById("valor_contrato").value;
+        if(value == 0.00){
+        $('#valor_contrato').val('');
+        }
+        
+        }
+        function mascara(o,f){
+            v_obj=o;
+            v_fun=f;
+            setTimeout("execmascara()",1);
+            }
+            function execmascara(){
+            v_obj.value=v_fun(v_obj.value);
+            }
+            function cpf(v){
+            console.log("Recibe: ",v);
+            
+            var signoV='';
+            var evaluarSignoV=v;
+            if(/^[\-]/.test(evaluarSignoV)){ console.log('Se encontró signo negativo'); signoV='-'; }
+            console.log("Detectar Signo negativo: ",signoV);
+            
+            v=v.replace(/([^0-9\.]+)/g,'');
+            
+            console.log("Reemplazo 1: ",v);
+            v=v.replace(/^[\.]/,'');
+            console.log("Reemplazo 2: ",v);
+            v=v.replace(/[\.][\.]/g,'');
+            console.log("Reemplazo 3: ",v);
+            v=v.replace(/\.(\d)(\d)(\d)/g,'.$1$2');
+            console.log("Reemplazo 4: ",v);
+            v=v.replace(/\.(\d{1,2})\./g,'.$1');
+            console.log("Reemplazo 5: ",v);
+            v = v.toString().split('').reverse().join('').replace(/(\d{3})/g,'$1,');
+            console.log("A string reverso: ",v);
+            v = v.split('').reverse().join('').replace(/^[\,]/,'');
+            console.log("Split a entregar: ",v);
+            v=signoV+v;
+            return v;
+            }
+
+            
+
+                function addCommas(nStr){
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+                }
 
         function deletesCell(e) {
             e.closest('tr').remove();
@@ -1014,9 +1073,6 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                 @endforeach
             @endif
 
-            <?php
-            //dd($contratos_supervisores);
-            ?>
 
             @if (isset($contratos_supervisores))
                 @foreach ($contratos_supervisores as $contrato_supervisor)
@@ -1049,24 +1105,35 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
 
 
 
-        })
-      
-        (function($) {
-            $.fn.currencyFormat = function() {
-                this.each(function(i) {
-                    $(this).change(function(e) {
-                        if (isNaN(parseFloat(this.value))) return;
-                        this.value = parseFloat(this.value).toFixed(2);
-                    });
-                });
-                return this; //for chaining
-            }
-        })(jQuery);
-
-        
-        $(function() {
-            $('.currency').currencyFormat();
         });
+
+         function maskInput(){
+
+            var valor_contrato;
+            var valor_inicial;
+            var valor_actual;
+            var otrosi_valor_adicion;
+
+
+            valor_contrato = document.getElementById("valor_contrato").value;
+            valor_contrato = valor_contrato.replace(/[\,]/g,'');
+            document.getElementById("valor_contrato").value = addCommas(parseFloat(valor_contrato).toFixed(2));
+
+            valor_inicial = document.getElementById("valor_inicial").value;
+            valor_inicial = valor_inicial.replace(/[\,]/g,'');
+            document.getElementById("valor_inicial").value = addCommas(parseFloat(valor_inicial).toFixed(2));
+
+            valor_actual = document.getElementById("valor_actual").value;
+            valor_actual = valor_actual.replace(/[\,]/g,'');
+            document.getElementById("valor_actual").value = addCommas(parseFloat(valor_actual).toFixed(2));
+
+            // otrosi_valor_adicion = document.getElementById("otrosi_valor_adicion").value;
+            //otrosi_valor_adicion = otrosi_valor_adicion.replace(/[\,]/g,'');
+            //document.getElementById("otrosi_valor_adicion").value = addCommas(parseFloat(otrosi_valor_adicion).toFixed(2));
+
+
+            }
+      
 
     </script>
 
@@ -1220,11 +1287,12 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
             success: function(respuesta) {
                 $.each(respuesta, function(index, elemento) {
                     $('#valor_inicial').val(elemento.valor_inicial);
-                    $('#valor_actual').val('$ '+Intl.NumberFormat().format(elemento.valor_actual));
-                    $('#valor_contrato').val('$ '+Intl.NumberFormat().format(elemento.valor_actual));
+                    $('#valor_actual').val(elemento.valor_actual);
+                    $('#valor_contrato').val(elemento.valor_actual);
                     $('#fecha_terminacion_actual').val(elemento.fecha_terminacion_actual.substring(0, 10));
                 
                     });
+                    maskInput();
                 }
             });
         }

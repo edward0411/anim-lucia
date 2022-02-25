@@ -32,6 +32,7 @@ class Contratos_fechasController extends Controller
 
         $valor_inicial=$request->valor_inicial;
         $valor_inicial=str_replace(',','',$valor_inicial); 
+       // dd($valor_inicial);
 
         $request->validate([
             'fecha_firma' => 'required',

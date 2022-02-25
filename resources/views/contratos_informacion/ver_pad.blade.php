@@ -54,7 +54,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                         <div class="form-group">
                                             <label><b>Valor del PAD</b></label>
                                             <p min="0" step="0.01">
-                                                {{number_format((float) $contratos[0]->valor_contrato, 2, '.', '')}}</p>
+                                              $ {{number_format((float) $contratos[0]->valor_contrato, 2, '.', ',')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-4 ">
@@ -415,15 +415,6 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                 <!-- /.collapseOne-->
             </div>
             <!-- /.card-->
-
-
-
-
-
-
-
-
-
         </div>
         <!-- /.accordion -->
     </div>
@@ -448,8 +439,6 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
 
     }
 
-
-    
     function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', numero_otrosi = '',fecha_firma = '',valor_adicion = '',fecha_terminacion = '',modificacion = '') {
        
        var cell = `
@@ -464,7 +453,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                `+fecha_firma+`
            </td>
            <td>
-               `+valor_adicion+`
+            $ `+addCommas(valor_adicion)+`
            </td>
            <td>
                `+fecha_terminacion+`
@@ -507,8 +496,6 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
 
       $("#tbl_suspensiones tbody").append(cell);
   }
-
-
 
    function traerOtrosis(){
 
@@ -557,6 +544,17 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
 
 
     traerOtrosis();
+    function addCommas(nStr){
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+                }
 
 </script>
 

@@ -85,17 +85,17 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                                     required>
                                             </div>
                                         </div>
-                                       
+
                                         <div class="col-md-4 col-lg-3">
                                             <div class="form-group">
                                                 <label>Valor del convenio *</label>
-                                                
+
                                                 @if($id_contrato == 0)
-                                                <input type="text" name="valor_contrato" id="valor_contrato" onkeypress="mascara(this,cpf)"  onpaste="return false" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : 0 }}" >
+                                                <input type="text" name="valor_contrato" id="valor_contrato" onfocus="myFunction()" onkeypress="mascara(this,cpf)"  onpaste="return false" class="form-control text-right" value=" {{ old('valor_contrato') != null ? old('valor_contrato') : '' }}" >
                                                 @else
-                                                <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : '') }}" disabled>
+                                                <input type="text" name="valor_contrato" id="valor_contrato" class="form-control text-right" value="{{ old('valor_contrato') != null ? old('valor_contrato') : (isset($contratos->valor_contrato) ? number_format($contratos->valor_contrato, 2) : ',') }}" disabled>
                                                 @endif
-                                               
+
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-lg-3" id="gr_numero_conenio">
@@ -332,7 +332,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                             <div class="form-group">
                                                 <label>Meses</label>
                                                 <input type="number" name="plazo_inicial_meses" id="plazo_inicial_meses"
-                                                    class="form-control" placeholder="" min="1" 
+                                                    class="form-control" placeholder="" min="1"
                                                     value="{{ $contratos_fechas->plazo_inicial_meses ?? '' }}">
                                             </div>
                                         </div>
@@ -749,33 +749,54 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 @section('script')
 
 
-        @includeFirst(['contratos_informacion.partials.otrosiscript'])
-        @includeFirst(['contratos_informacion.partials.terminacionescript'])
+@includeFirst(['contratos_informacion.partials.otrosiscript'])
+@includeFirst(['contratos_informacion.partials.terminacionescript'])
+<script type="text/javascript">
+            function myFunction(){
+                            var value;
+                            value = document.getElementById("valor_contrato").value;
+                            if(value == 0.00){
+                                $('#valor_contrato').val('');
+                            }
 
+                }
 
-
-        <script type="text/javascript">
-
-            function mascara(o,f){  
-                    v_obj=o;  
-                    v_fun=f;  
-                    setTimeout("execmascara()",1);  
-                }  
-                function execmascara(){   
+            function mascara(o,f){
+                    v_obj=o;
+                    v_fun=f;
+                    setTimeout("execmascara()",1);
+                }
+                function execmascara(){
                     v_obj.value=v_fun(v_obj.value);
-                }  
-                function cpf(v){     
-                    v=v.replace(/([^0-9\.]+)/g,''); 
-                    v=v.replace(/^[\.]/,''); 
-                    v=v.replace(/[\.][\.]/g,''); 
-                    v=v.replace(/\.(\d)(\d)(\d)/g,'.$1$2'); 
-                    v=v.replace(/\.(\d{1,2})\./g,'.$1'); 
-                    v = v.toString().split('').reverse().join('').replace(/(\d{3})/g,'$1,');    
-                    v = v.split('').reverse().join('').replace(/^[\,]/,''); 
-                    return v;  
-                } 
+                }
+                function cpf(v){
+                    console.log("Recibe:  ",v);
 
-                function addCommas(nStr){
+                        var signoV='';
+                        var evaluarSignoV=v;
+                        if(/^[\-]/.test(evaluarSignoV)){ console.log('Se encontró signo negativo'); signoV='-'; }
+                        console.log("Detectar Signo negativo:  ",signoV);
+
+                        v=v.replace(/([^0-9\.]+)/g,'');
+
+                        console.log("Reemplazo 1:  ",v);
+                        v=v.replace(/^[\.]/,'');
+                        console.log("Reemplazo 2:  ",v);
+                        v=v.replace(/[\.][\.]/g,'');
+                        console.log("Reemplazo 3:  ",v);
+                        v=v.replace(/\.(\d)(\d)(\d)/g,'.$1$2');
+                        console.log("Reemplazo 4:  ",v);
+                        v=v.replace(/\.(\d{1,2})\./g,'.$1');
+                        console.log("Reemplazo 5:  ",v);
+                        v = v.toString().split('').reverse().join('').replace(/(\d{3})/g,'$1,');
+                        console.log("A string reverso:  ",v);
+                        v = v.split('').reverse().join('').replace(/^[\,]/,'');
+                        console.log("Split a entregar:  ",v);
+                        v=signoV+v;
+                    return v;
+                }
+
+             function addCommas(nStr){
                     nStr += '';
                     x = nStr.split('.');
                     x1 = x[0];
@@ -786,9 +807,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     }
                     return x1 + x2;
                 }
-
-
-
+                
             function HabilitarInput(element,element2){
 
                 if ($(element).is(":checked")) {
@@ -803,7 +822,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
             }
 
             function adicionarPoliza(id_contratos_polizas = 0 ) {
-              
+
                 var total = $("#addPoliza").attr('data-count');
 
                     total++;
@@ -847,7 +866,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
             function AgregarAPoliza(id,numero,aseguradora,fecha_aprobacion,observaciones){
                 adicionarPoliza(id)
                 var total = $("#addPoliza").attr('data-count');
-            
+
                 $(`#polizas_numero_`+total).val(numero);
                 $(`#polizas_aseguradora_`+total).val(aseguradora);
                 $(`#polizas_fecha_aprobacion_`+total).val(fecha_aprobacion);
@@ -855,8 +874,6 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
             }
 
             function showGrupo(element,grupo) {
-
-              
 
                 if($(element).is(":checked")) {
 
@@ -890,9 +907,8 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 }
             }
 
-
             function addPartesConvenio(name,id_contratos_terceros){
-               
+
                 var total = $("#add"+name).attr('data-count');
                     total++;
                     $("#add"+name).attr('data-count', total);
@@ -907,7 +923,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" step="0.01" onkeypress="mascara(this,cpf)" class="form-control text-right" id="valor_`+name+`_`+total+`" placeholder="" name="valor_`+name+`[]"   required>
+                                        <input type="text" onkeypress="mascara(this,cpf)" class="form-control text-right" id="valor_`+name+`_`+total+`" placeholder="" name="valor_`+name+`[]"   required>
                                 </div>
                                 </td>
                                 <td>
@@ -915,25 +931,22 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                 </td>
                             </tr>
                             `;
-               
+
                             $("#tbl"+name+" tbody").append(cell);
-
             }
-
 
             function AgregarAPartesConvenio(name,id_contratos_terceros,nombre_tercero,valor){
                 addPartesConvenio(name,id_contratos_terceros);
                 var total = $("#add"+name).attr('data-count');
                 console.log(valor,1);
-            
+
                 $(`#`+name+`_`+total).val(nombre_tercero);
                 llenarSupervisores(total,name);
                 $(`#valor_`+name+`_`+total).val(addCommas(valor));
                 $(`#id_contratos_`+name+`_`+total).val(id_contratos_terceros);
-                
 
+                maskInput();
             }
-
 
             function deletesCell_terceros_contrato(e,id_contratos_terceros) {
 
@@ -941,10 +954,8 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 {
                     return false;
                 }
-
                 if(id_contratos_terceros==0){
                     e.closest('tr').remove();
-                   
                 }else{
 
                     var url="{{ route('contratos_terceros.delete_info_terceros') }}";
@@ -952,14 +963,12 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     "_token": $('meta[name="csrf-token"]').attr('content'),
                     "id_contratos_tercero":id_contratos_terceros
                     };
-
                     $.ajax({
                     type: 'GET',
                     url: url,
                     data: datos,
                     success: function(respuesta) {
                         $.each(respuesta, function(index, elemento) {
-                              
                                 e.closest('tr').remove();
                             });
                         }
@@ -967,17 +976,13 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 }
             }
 
-
             function deletesCellSupervisor(e,id_contrato_supervisor) {
-
                 if(confirm('¿Desea eliminar el registro?')==false )
                 {
                     return false;
                 }
-
                 if(id_contrato_supervisor==0){
                     e.closest('tr').remove();
-                 
                 }else{
 
                     var url="{{ route('contratos_supervisores.delete') }}";
@@ -992,7 +997,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     data: datos,
                     success: function(respuesta) {
                         $.each(respuesta, function(index, elemento) {
-                               
+
                                 e.closest('tr').remove();
                             });
                         }
@@ -1001,25 +1006,19 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
             }
 
-
             function deletesCellComites(e,id_contrato_comite) {
-
                 if(confirm('¿Desea eliminar el registro?')==false )
                 {
                     return false;
                 }
-
                 if(id_contrato_comite==0){
                     e.closest('tr').remove();
-                  
                 }else{
-
                     var url="{{ route('contratos_comites.delete') }}";
                     var datos = {
                     "_token": $('meta[name="csrf-token"]').attr('content'),
                     "id_contrato_comite":id_contrato_comite
                     };
-
                     $.ajax({
                     type: 'GET',
                     url: url,
@@ -1032,13 +1031,9 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                         }
                     });
                 }
-
             }
 
-
             function addInterventor(name,id_contratos_supervisores = 0) {
-
-              
                 var total = $("#add"+name).attr('data-count');
                     total++;
                     $("#add"+name).attr('data-count', total);
@@ -1078,19 +1073,13 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                             </td>
                         </tr>
                         `;
-
-
                 $("#tbl"+name+" tbody").append(cell);
                 $('#contrato_'+name+'_'+total).select2({
                     theme: "bootstrap"
                 });
-
             }
 
-
             function addSupervisor(name,id_contratos_supervisores = 0) {
-
-              
                 var total = $("#add"+name).attr('data-count');
                     total++;
                     $("#add"+name).attr('data-count', total);
@@ -1117,61 +1106,40 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
                             </div>
                             </td>
-
                             <td>
                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="deletesCellSupervisor(this,`+id_contratos_supervisores+`)">Eliminar</button>
                             </td>
                         </tr>
                         `;
-
-
                 $("#tbl"+name+" tbody").append(cell);
-
             }
 
-
             function AgregarASupervisoresConvenio(name,id_contratos_supervisores,nombre_tercero, fecha_asociacion, estado){
-
                 addSupervisor('supervisor',id_contratos_supervisores);
                 var total = $("#add"+name).attr('data-count');
-            
                 $(`#`+name+`_`+total).val(nombre_tercero);
                 llenarSupervisores(total,name);
                 $(`#estado_`+name+`_`+total).val(estado);
                 $(`#`+name+`_fecha_`+total).val(fecha_asociacion);
-
             }
-
-
-
             function AgregarAInterventoresConvenio(name,id_contratos_supervisores,id_contrato_interventor, fecha_asociacion, estado){
-
                 addInterventor('interventor',id_contratos_supervisores);
                 var total = $("#add"+name).attr('data-count');
-            
                 $(`#contrato_`+name+`_`+total).select2().val(id_contrato_interventor).trigger("change");
-            
                 $(`#estado_`+name+`_`+total).val(estado);
                 $(`#`+name+`_fecha_`+total).val(fecha_asociacion);
-
             }
-
 
             function AgregarAApoyosConvenio(name,id_contratos_supervisores,nombre_tercero, fecha_asociacion, estado){
                 addSupervisor('apoyo',id_contratos_supervisores);
                 var total = $("#add"+name).attr('data-count');
-            
                 $(`#`+name+`_`+total).val(nombre_tercero);
                 llenarSupervisores(total,name);
                 $(`#estado_`+name+`_`+total).val(estado);
                 $(`#`+name+`_fecha_`+total).val(fecha_asociacion);
-
             }
 
-
-
             function addComites(name,id_contratos_comites = 0) {
-
                 // var cell = $("#cell-clone").clone();
                 var total = $("#add"+name).attr('data-count');
                     total++;
@@ -1199,50 +1167,37 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                                     @endforeach
                                 @endif
                                 </select>
-
                     </div>
                     </td>
-
                     <td>
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="deletesCellComites(this,`+id_contratos_comites+`)">Eliminar</button>
                     </td>
                 </tr>
                 `;
-
-
                 $("#tbl"+name+" tbody").append(cell);
-
             }
-
 
             function AgregarAComitesConvenio(name,id_contratos_comite,nombre_tercero, fecha_asociacion, role){
                 addComites(name,id_contratos_comite);
                 var total = $("#add"+name).attr('data-count');
-            
                 $(`#`+name+`_`+total).val(nombre_tercero)
                 llenarSupervisores(total,name)
                 //$(`#id_`+name+`_`+id_tercero+`_`+total).val(id_tercero)
                 $(`#role_`+name+`_`+total).val(role);
                 $(`#`+name+`_fecha_`+total).val(fecha_asociacion);
-
             }
-
 
             var modalidad = [
                 @foreach ($modalidad as $item)
-                
                     {
                     "clase_regimen": "{{ $item->valor_padre }}",
                     "texto_modalidad": "{{ $item->texto }}",
                     "tipo_modalidad": "{{ $item->valor }}"
                     },
-                
                 @endforeach
-
             ];
 
             function llenatModalidades() {
-
                 var selectedContratos = $("#regimen").children("option:selected").val();
                 nuevo = $.grep(modalidad, function(n, i) {
                     return n.clase_regimen === selectedContratos
@@ -1252,7 +1207,6 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 $.each(nuevo, function(key, value) {
                     $('#modalidad').append($('<option></option>').val(value.tipo_modalidad).html(value.texto_modalidad));
                 });
-
             }
 
             function mostrarConvenios(){
@@ -1282,7 +1236,6 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
             }
 
             function traercdrmoviemientos(){
-
                     var idcdr=$('#id_cdr').val();
                     var url="{{ route('contratos_cdr.get_movimiento_cdr') }}";
                     var datos = {
@@ -1313,13 +1266,11 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
             //enventos al inciar el programaW
             $(document).ready(function(){
-
                 if ($('#plazo_inicial_definir').is(":checked")) {
                     $('#fecha_terminacion').attr("disabled", true);
                 }else {
                     $('#fecha_terminacion').attr("disabled", false);
                 }
-
                 showGrupo('#requiere_pliza','#gr_polizas');
                 showGrupo('#requiere_arl','#gr_requiere_arl');
                 showGrupo('#requiere_acta_inicio','#gr_requiere_acta_inicio');
@@ -1342,15 +1293,13 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 @endif
                 @if (isset($contratos_terceros))
                     @foreach ($contratos_terceros as $contrato_tercero)
-                    
+
                         AgregarAPartesConvenio('entidad','{{ $contrato_tercero->id }}','{{ $contrato_tercero->tercero->identificacion }} - {{ $contrato_tercero->tercero->nombre }}',{{is_null($contrato_tercero->valor_aporte)? 0 : $contrato_tercero->valor_aporte }});
                     @endforeach
                 @endif
 
-
-
                 @if (isset($contratos_supervisores))
-                
+
                     @foreach ($contratos_supervisores as $contrato_supervisor)
                         @if ($contrato_supervisor->id_tipo_supervisor == 1)
                             AgregarASupervisoresConvenio('supervisor','{{ $contrato_supervisor->id }}','{{ $contrato_supervisor->tercero->identificacion }} - {{ $contrato_supervisor->tercero->nombre }}','{{ $contrato_supervisor->Fecha_asociacion }}','{{ $contrato_supervisor->estado }}');
@@ -1361,9 +1310,6 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                         @endif
                     @endforeach
                 @endif
-
-
-
 
                 @if (isset($contratos_comites))
                     @foreach ($contratos_comites as $contrato_comite)
@@ -1382,48 +1328,43 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                         AgregarAPoliza("{{ $contrato_poliza->id }}","{{ $contrato_poliza->numero_poliza }}","{{ $contrato_poliza->aseguradora }}","{{ $contrato_poliza->fecha_aprobacion }}","{{ $contrato_poliza->observaciones }}");
                     @endforeach
                 @endif
-               
-                maskInput();
+
                 
+
             });
 
-           
         function maskInput(){
-        
+
         var valor_contrato;
         var valor_inicial;
         var valor_actual;
         var otrosi_valor_adicion;
-        
-        
+
         valor_contrato = document.getElementById("valor_contrato").value;
-        valor_contrato = valor_contrato.replace(/[\,]/g,''); 
+        valor_contrato = valor_contrato.replace(/[\,]/g,'');
         document.getElementById("valor_contrato").value = addCommas(parseFloat(valor_contrato).toFixed(2));
 
         valor_inicial = document.getElementById("valor_inicial").value;
-        valor_inicial = valor_inicial.replace(/[\,]/g,''); 
+        valor_inicial = valor_inicial.replace(/[\,]/g,'');
         document.getElementById("valor_inicial").value = addCommas(parseFloat(valor_inicial).toFixed(2));
 
         valor_actual = document.getElementById("valor_actual").value;
-        valor_actual = valor_actual.replace(/[\,]/g,''); 
+        valor_actual = valor_actual.replace(/[\,]/g,'');
         document.getElementById("valor_actual").value = addCommas(parseFloat(valor_actual).toFixed(2));
 
        // otrosi_valor_adicion = document.getElementById("otrosi_valor_adicion").value;
-        //otrosi_valor_adicion = otrosi_valor_adicion.replace(/[\,]/g,''); 
+        //otrosi_valor_adicion = otrosi_valor_adicion.replace(/[\,]/g,'');
         //document.getElementById("otrosi_valor_adicion").value = addCommas(parseFloat(otrosi_valor_adicion).toFixed(2));
-        
-        
+
         }
 
 
-        </script>
-
-       
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous">
-        </script>
-        <script>
-           
-            $(document).ready(function() {
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"
+    integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous">
+</script>
+<script>
+    $(document).ready(function() {
             // bind form using ajaxForm
             $('#contratos_cdr').ajaxForm({
                 // dataType identifies the expected content type of the server response
@@ -1489,7 +1430,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     $('#fecha_maxima_liquidacion').val(data.objeto.fecha_maxima_liquidacion);
                     traerinfoValoresContrato(data.objeto.id_contrato);
 
-                    
+
 
                 },
                 error: function(data) {
@@ -1562,10 +1503,10 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
             success: function(respuesta) {
                 $.each(respuesta, function(index, elemento) {
                     $('#valor_inicial').val(elemento.valor_inicial);
-                    $('#valor_actual').val(Intl.NumberFormat().format(elemento.valor_actual));
-                    $('#valor_contrato').val(Intl.NumberFormat().format(elemento.valor_actual));
+                    $('#valor_actual').val(elemento.valor_actual);
+                    $('#valor_contrato').val(elemento.valor_actual);
                     $('#fecha_terminacion_actual').val(elemento.fecha_terminacion_actual.substring(0, 10));
-                
+
                     });
                     maskInput();
                 }
@@ -1608,7 +1549,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     $('#banco').val(elemento.param_banco_valor);
                     $('#numero_cuenta').val(elemento.numero_cuenta);
                     $('#detalle_tercero').val(elemento.id);
-                        
+
                     });
                 }
             });
@@ -1621,5 +1562,5 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
 
         }
 
-        </script>
+</script>
 @endsection

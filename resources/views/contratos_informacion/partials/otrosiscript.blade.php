@@ -38,7 +38,7 @@ function adicionarModificaciones(id_contratos_otrosi = 0, tipo_otrosi = '', nume
             `+fecha_firma+`
         </td>
         <td>
-        `+addCommas(valor_adicion)+`           
+         $`+addCommas(valor_adicion)+`           
         </td>
         <td>
             `+fecha_terminacion+`
