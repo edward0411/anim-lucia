@@ -420,6 +420,7 @@
     Route::get('crear/proyectos','ProyectosController@crear')->name('proyectos.crear')->middleware('can:modulo_tecnico.gestion_proyectos.crear');
     Route::get('crear_info/proyectos/{id}','ProyectosController@crear_info')->name('proyectos.crear_info')->middleware('can:modulo_tecnico.gestion_proyectos.ver');
     Route::get('editar/proyectos/{id}','ProyectosController@editar')->name('proyectos.editar')->middleware('can:modulo_tecnico.gestion_proyectos.editar');
+    Route::get('delete/proyectos/{id}','ProyectosController@delete')->name('proyectos.delete');
     Route::post('/store/proyectos','ProyectosController@store')->name('proyectos.store')->middleware('can:modulo_tecnico.gestion_proyectos.crear');
 
     Route::get('ver/proyectos/principales','Proyecto_principalController@index')->name('proyectos.principales.index')->middleware('can:modulo_tecnico.gestion_proyectos.ver');

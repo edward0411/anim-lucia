@@ -18,14 +18,12 @@ use Illuminate\Support\Facades\DB;
 
 class ProyectosController extends Controller
 {
-    //
-    public function index(){
+    public function index()
+    {
 
         $user = Auth::user()->id;
         $userb = users::with('roles')->where('id', $user)->first();
         $role= $userb->roles->first()->name;
-
-
 
         if($role=='Administrador'){
 
@@ -38,8 +36,6 @@ class ProyectosController extends Controller
 
            $proyectos = proyectos::get();
 
-            //dd( $proyectos );
-
             return view('proyectos.index',compact('proyectos'));
         }else{
 
@@ -50,18 +46,13 @@ class ProyectosController extends Controller
             ->distinct()
             ->get();
 
-            //dd($proyectos);
             return view('proyectos.index',compact('proyectos'));
         }
-
-
-
-        /*$proyectos = proyectos::get();
-        return view('proyectos.index',compact('proyectos'));*/
-
+        
     }
 
-    public function crear(Request $request){
+    public function crear(Request $request)
+    {
 
         $tipo_proyecto = Parametricas::getFromCategory('tecnico.proyectos.tipo_proyectos');
 
@@ -72,7 +63,8 @@ class ProyectosController extends Controller
         return view('proyectos.crear',compact('tipo_proyecto','departamentos','municipios','proyecto_pal'));
     }
 
-    public function editar($id){
+    public function editar($id)
+    {
 
         $proyecto = proyectos::where('proyectos.id',$id)
         ->leftjoin('municipios','proyectos.id_municipio','=','municipios.id')
@@ -93,7 +85,8 @@ class ProyectosController extends Controller
         return view('proyectos.editar',compact('proyecto','tipo_proyecto','departamentos','municipios','municipioDeptos','proyecto_pal'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $proyecto = proyectos::find($request->id_proyecto);
 
@@ -155,7 +148,8 @@ class ProyectosController extends Controller
 
     }
 
-    public function crear_info($id){
+    public function crear_info($id)
+    {
 
         $proyecto = proyectos::find($id);
 
@@ -199,5 +193,14 @@ class ProyectosController extends Controller
         return view('proyectos.crear_info',compact('proyecto','caracteristicas_proyecto','licencias_proyecto','modalidad','tipo_tramite','rol_proyecto','subdireccion_proyecto','estado_licencia','convenios','tercero','usuarios','fases'));
     }
 
+    public function delete($id)
+    {
+        $proyecto = proyectos::find($id);
+        $proyecto->deleted_by = Auth::user()->id;
+        $proyecto->save();
+        $proyecto->delete();
+
+        return redirect()->route('proyectos.index')->with('success','Fase eliminada con éxito');
+    }
 
 }

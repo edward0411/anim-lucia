@@ -29,10 +29,9 @@ $vars=[ 'breadcrum' => ['Técnico','Gestión Fases'],
                 <table id="tabledata1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Nombre de la fase</th>
-                            <th>Tipo de la Fase</th>
-
-                            <th>Acciones</th>
+                            <th style="width: 50%">Nombre de la fase</th>
+                            <th style="width: 10%">Tipo de la Fase</th>
+                            <th style="width: 40%">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,21 +39,26 @@ $vars=[ 'breadcrum' => ['Técnico','Gestión Fases'],
                         <tr>
                            <td>{{$proyecto['nombre_proyecto']}}</td>
                            <td>{{$proyecto['param_tipo_proyecto_texto']}}</td>
-
                            <td width="10%">
-                            <div class="row flex-nowrap">
-                            @can('modulo_tecnico.gestion_proyectos.editar')
-                                <div class="col">
-                                    <a href="{{route('proyectos.editar',$proyecto['id'])}}" type="button"  class="btn btn-sm btn-outline-primary" name="Editar" vuale="Editar">Editar</a>
+                                <div class="row flex-nowrap">
+                                    @can('modulo_tecnico.gestion_proyectos.editar')
+                                        <div class="col-md-3 ">
+                                            <a href="{{route('proyectos.editar',$proyecto['id'])}}" type="button"  class="btn btn-sm btn-outline-primary" name="Editar" vuale="Editar">Editar</a>
+                                        </div>
+                                    @endcan
+                                    @can('modulo_tecnico.gestion_proyectos.ver')
+                                        <div class="col-md-3">
+                                            <a href="{{route('proyectos.crear_info',$proyecto['id'])}}" type="button"  class="btn btn-sm btn-outline-primary" name="Ver" vuale="Ver">Ver</a>
+                                        </div>
+                                    @endcan
+                                    <div class="col-md-3"></div>
+                                    @if(Auth::user()->roles()->first()->id == 10)
+                                        <div class="col-md-3">
+                                            <a href="{{route('proyectos.delete',$proyecto['id'])}}" type="button" onclick="return confirm('¿Desea eliminar la fase? Une vez realizado este proceso no es reversible')"  class="btn btn-sm btn-outline-danger" name="Eliminar" vuale="">Eliminar</a>
+                                        </div>
+                                    @endif
                                 </div>
-                             @endcan
-                             @can('modulo_tecnico.gestion_proyectos.ver')
-                                <div class="col">
-                                    <a href="{{route('proyectos.crear_info',$proyecto['id'])}}" type="button"  class="btn btn-sm btn-outline-primary" name="Ver" vuale="Ver">Ver</a>
-                                </div>
-                            @endcan
-                            </div>
-                        </td>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
