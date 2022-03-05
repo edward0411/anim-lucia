@@ -71,6 +71,7 @@
                     <a href="{{route('reportes.reporte_personas_asignadas_proyectos.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte personas asignadas proyectos <i class="fas fa-arrow-circle-right"></i></a>
                     <a href="{{route('reportes.reporte_bitacoras_proyectos.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte bitacora proyectos <i class="fas fa-arrow-circle-right"></i></a>
                     <a href="{{route('reportes.reporte_balance_proyectos_contratos.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte balance proyectos contratos <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{route('reportes.supervision.index')}}" class="btn btn-outline-primary btn-sm btn-block">Reporte Supervisión<i class="fas fa-arrow-circle-right"></i></a>
 
                 </div>
                 </div>

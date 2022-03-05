@@ -802,6 +802,10 @@
 
     Route::get('/consulta/reporte_informe_supervision','Reportes\ReporteInformeSupervisionController@index')->name('reportes.informe_supervision.index');
     Route::post('/busqueda/reporte_informe_supervision','Reportes\ReporteInformeSupervisionController@busqueda')->name('reportes.informe_supervision.busqueda');
+
+    ////////////////////// Reporte supervision////////////////////////////////
+
+    Route::get('/consulta/reporte_supervision','Reportes\ReporteSupervisionController@index')->name('reportes.supervision.index');
     
     
     /////Informe de seguimientos de proyectos////

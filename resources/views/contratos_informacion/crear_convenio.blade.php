@@ -762,6 +762,7 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                 }
 
             function mascara(o,f){
+
                     v_obj=o;
                     v_fun=f;
                     setTimeout("execmascara()",1);
@@ -770,7 +771,6 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                     v_obj.value=v_fun(v_obj.value);
                 }
                 function cpf(v){
-                    console.log("Recibe:  ",v);
 
                         var signoV='';
                         var evaluarSignoV=v;
@@ -778,20 +778,12 @@ $vars=[ 'breadcrum' => ['Contractual','Convenios'],
                         console.log("Detectar Signo negativo:  ",signoV);
 
                         v=v.replace(/([^0-9\.]+)/g,'');
-
-                        console.log("Reemplazo 1:  ",v);
                         v=v.replace(/^[\.]/,'');
-                        console.log("Reemplazo 2:  ",v);
                         v=v.replace(/[\.][\.]/g,'');
-                        console.log("Reemplazo 3:  ",v);
                         v=v.replace(/\.(\d)(\d)(\d)/g,'.$1$2');
-                        console.log("Reemplazo 4:  ",v);
                         v=v.replace(/\.(\d{1,2})\./g,'.$1');
-                        console.log("Reemplazo 5:  ",v);
                         v = v.toString().split('').reverse().join('').replace(/(\d{3})/g,'$1,');
-                        console.log("A string reverso:  ",v);
                         v = v.split('').reverse().join('').replace(/^[\,]/,'');
-                        console.log("Split a entregar:  ",v);
                         v=signoV+v;
                     return v;
                 }

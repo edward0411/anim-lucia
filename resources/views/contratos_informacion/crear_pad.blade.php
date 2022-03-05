@@ -251,7 +251,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                                                     <label>Valor actual</label>
                                                     <input type="text" name="valor_actual" id="valor_actual"
                                                         class="form-control text-right" placeholder=""
-                                                        value="{{ number_format($contratos_fechas->valor_actual ?? ($contratos->valor_contrato ?? 0), 2, '.', '') }}"
+                                                        value="{{ number_format($contratos_fechas->valor_actual ?? ($contratos->valor_contrato ?? 0), 2, '.', ',') }}"
                                                         required readonly>
                                                 </div>
                                             </div>
@@ -1003,7 +1003,7 @@ $vars=[ 'breadcrum' => ['Contractual','PAD'],
                         $('#dependencia').val(elemento.param_valor_dependencia)
                         $('#vigencia').val(elemento.vigencia)
                         $('#valor_contrato').val(elemento.valor_contrato)
-
+                        maskInput();
                     });
                     tablacdr;
                     // $('.currency').currencyFormat();
