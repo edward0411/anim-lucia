@@ -32,8 +32,6 @@ function traer_terminacion(){
     success: function(respuesta) {
         $.each(respuesta, function(index, elemento) {
 
-            console.log(elemento);
-
             if (elemento.param_tipo_terminacion_valor === "1") {
 
                 $('#terminacion1').prop('checked',true);
@@ -138,8 +136,8 @@ var cell = `
     <td>
         `+descripcion_cuenta+`
     </td>
-    <td>
-    $`+Intl.NumberFormat().format(valor_cuenta)+`
+    <td class="text-right number">
+    $`+addCommas(parseFloat(valor_cuenta).toFixed(2))+`
     </td>
     <td>
         <input type="number" step="0.01" name="valor_contratado[]" value="`+valor_contratado+`" class="form-control" required>
@@ -166,7 +164,7 @@ function Cargar_info_cdr(){
     success: function(respuesta)
     {
             $("#tblAfectacionFinanciera tbody").empty();
-            $('#valor_cdp').val('$'+Intl.NumberFormat().format(respuesta.valor))
+            $('#valor_cdp').val('$'+addCommas(parseFloat(respuesta.valor).toFixed(2)))
         
             $.each(respuesta.cuentas, function(index, elemento) {
                 adicionarPads(elemento.id , elemento.pad ?? '', elemento.numero_de_cuenta ?? '',elemento.descripcion_cuenta ?? '',elemento.valor ?? '')
@@ -190,9 +188,9 @@ var cell = `
     <td>
         `+descripcion_cuenta+`
     </td>
-    <td>
+    <td class="text-right number">
     <input type="hidden" name="valor_cuenta[]" value="`+valor_cuenta+`">
-    $`+Intl.NumberFormat().format(valor_cuenta)+`
+    $`+addCommas(parseFloat(valor_cuenta).toFixed(2))+`
     </td>
     <td>
         <input type="number" step="0.01" name="valor_contratado[]" value="" class="form-control" required>

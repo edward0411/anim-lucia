@@ -276,7 +276,7 @@
                                         Fecha de inicio de suspensión
                                     </th>
                                     <th>
-                                        Feche fin de suspensión
+                                        Fecha fin de suspensión
                                     </th>
                                     <th>
                                         Tiempo

@@ -159,7 +159,7 @@
                                     <option value="{{$cdr->id}}"
                                         {{(old('id_cdr') ?? $contratos->id_cdr ?? 0 ) == ($cdr->id ?? '') ? "selected" :""  }}>
                                         {{$cdr->id}} -
-                                        {{number_format($cdr->saldo_cdr(),2,',','.')}}
+                                        {{number_format($cdr->saldo_cdr(),2,'.',',')}}
                                         </option>
                                     @endforeach  
                                 </select>
