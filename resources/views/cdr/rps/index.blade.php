@@ -56,6 +56,7 @@ $vars=[ 'breadcrum' => ['Financiero','CDR','Registro de Compromisos'],
                 <h3 class="card-title">Compromisos Asociados</h3>
             </div>
             <div class="card-body" style="overflow-x: scroll;max-height: 500px;overflow-y: scroll;">
+                <div id="rp_mensaje_error"> </div>
                     <table id="tbl_RPS" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -508,15 +509,23 @@ function deletesCell_rp(id_rp) {
         url: url,
         data: datos,
         success: function(respuesta) {
-            $.each(respuesta, function(index, elemento) {
+            console.log(respuesta);
                 traerRps();
-                    $('#rp_mensaje').html(
+                    if (respuesta.status == "error") {
+                        $('#rp_mensaje_error').html(
+                        `<div class="alert alert-danger alert-block shadow">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>`+respuesta.message+`</strong>
+                        </div>`
+                        )
+                    }else{
+                        $('#rp_mensaje').html(
                         `<div class="alert alert-success alert-block shadow">
                             <button type="button" class="close" data-dismiss="alert">×</button>
                                 <strong>Se ha eliminado el registro</strong>
                         </div>`
-                    )
-                });
+                        )
+                    } 
             }
         });
     }
@@ -566,7 +575,6 @@ $(document).ready(function() {
     function processError(data, div_mensaje) {
 
         errores= "";
-        console.log(data);
         dataerror = data;
         $.each(data.responseJSON.errors, function(index, elemento) {
             errores += "<li>"+elemento+"</li>"

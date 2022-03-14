@@ -18,7 +18,6 @@ class RpsCuentasController extends Controller
 {
     public function index(Request $request)
     {
-
         $rps = cdr_rp::leftJoin('terceros','terceros.id','=','rps.id_tercero')
         ->select('rps.*','terceros.nombre','identificacion')
         ->where('rps.id',$request->id)->first(); 
@@ -33,7 +32,8 @@ class RpsCuentasController extends Controller
         return view('cdr.rps.cuentas.index',compact('rps','cuentas'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $registro = rp_cuenta::where('id_rp',$request->id_rp)
         ->where('id_cuenta',$request->id_cuenta)
@@ -74,7 +74,8 @@ class RpsCuentasController extends Controller
         return response()->json($respuesta);
     }
 
-    public function get_info_cuentas(Request $request){
+    public function get_info_cuentas(Request $request)
+    {
 
         $cuentas = rp_cuenta::leftJoin('patrimonio_cuentas','patrimonio_cuentas.id','=','rps_cuentas.id_cuenta')
         ->where('rps_cuentas.id_rp',$request->id_rp)
@@ -92,28 +93,32 @@ class RpsCuentasController extends Controller
     public function delete(Request $request)
     {
         $rp_cuenta = rp_cuenta::find($request->id_rp_cuenta);
-        $rp_cuenta->deleted_by = Auth::user()->id;
-        $rp_cuenta->save();
+        if(count($rp_cuenta->Rps_movimientos) == 0){
 
-        $informacionlog = 'Se ha eliminado la informacion del movimiento';
-        $objetolog = [
-                'user_id' => Auth::user()->id,
-                'user_email' => Auth::user()->mail,
-                'Objeto Eliminado' => $rp_cuenta,
-                ];                
+            $rp_cuenta->deleted_by = Auth::user()->id;
+            $rp_cuenta->save();
 
-        Log::channel('database')->info( 
-            $informacionlog ,
-            $objetolog
-        );
+            $informacionlog = 'Se ha eliminado la informacion del movimiento';
+            $objetolog = [
+                    'user_id' => Auth::user()->id,
+                    'user_email' => Auth::user()->mail,
+                    'Objeto Eliminado' => $rp_cuenta,
+                    ];                
 
-        $rp_cuenta->delete();
+            Log::channel('database')->info( 
+                $informacionlog ,
+                $objetolog
+            );
 
-        // $info_contra = informacion_contractuals::all();
-        $respuesta['status']="success";
-        $respuesta['message']="Se ha eliminado registro";
-        $respuesta['objeto']=$rp_cuenta;
-
+            $rp_cuenta->delete();
+            $respuesta['status']="success";
+            $respuesta['message']="Se ha eliminado registro";
+            $respuesta['objeto']=$rp_cuenta;
+        }else{
+            $respuesta['status']="error";
+            $respuesta['message'] = "La relación con la cuenta N° ".$rp_cuenta->Cuentas->numero_de_cuenta." no puede ser eliminada por que ya tiene movimientos creados.";
+            $respuesta['objeto']= $rp_cuenta;
+        }
         return response()->json($respuesta);
     }  
     

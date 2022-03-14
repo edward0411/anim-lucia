@@ -120,34 +120,35 @@ class CdrRpsController extends Controller
 
     public function delete(Request $request)
     {
-
         $id_rp = cdr_rp::find($request->id_rp);
+        if(count($id_rp->Rps_cuentas) == 0){
 
-        $id_rp->deleted_by = Auth::user()->id;
-        $id_rp->save();
-
-
-        $informacionlog = 'Se ha eliminado la informacion del movimiento';
-        $objetolog = [
-                'user_id' => Auth::user()->id,
-                'user_email' => Auth::user()->mail,
-                'Objeto Eliminado' => $id_rp,
-                ];
-
-        Log::channel('database')->info(
-            $informacionlog ,
-            $objetolog
-        );
-
-
-        $id_rp->delete();
-
-        // $info_contra = informacion_contractuals::all();
-        $respuesta['status']="success";
-        $respuesta['message']="Se ha eliminado registro";
-        $respuesta['objeto']=$id_rp;
-
-
+            $id_rp->deleted_by = Auth::user()->id;
+            $id_rp->save();
+    
+            $informacionlog = 'Se ha eliminado la informacion del movimiento';
+            $objetolog = [
+                    'user_id' => Auth::user()->id,
+                    'user_email' => Auth::user()->mail,
+                    'Objeto Eliminado' => $id_rp,
+                    ];
+    
+            Log::channel('database')->info(
+                $informacionlog ,
+                $objetolog
+            );
+    
+            $id_rp->delete();
+            $respuesta['status']="success";
+            $respuesta['message']="Se ha eliminado registro";
+            $respuesta['objeto']=$id_rp;
+          
+        }else{
+            $respuesta['status']="error";
+            $respuesta['message'] = "El RP número ".$id_rp->id." no puede ser eliminado portener relacionada cuentas activas.";
+            $respuesta['objeto']= $id_rp;
+           
+        }
         return response()->json($respuesta);
     }
 

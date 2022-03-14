@@ -72,6 +72,7 @@ $vars=[ 'breadcrum' => ['Financiero','CDR','RP','Cuentas'],
                 <h3 class="card-title">Cuentas Asociadas al Compromiso</h3>
             </div>
             <div class="card-body">
+                <div id="rp_cuenta_mensaje_error"> </div>
                 <table id="tbl_RPS_cuentas" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -277,16 +278,24 @@ function deletesCell_rp_cuenta(id) {
         url: url,
         data: datos,
         success: function(respuesta) {
-            $.each(respuesta, function(index, elemento) {
-                traerRps_Cuentas();
-                Consultar_pendiente_comprometer();
-                $('#patrimonios_cuenta_rendimientos_mensaje').html(
+            traerRps_Cuentas();
+            Consultar_pendiente_comprometer();
+
+            if (respuesta.status == "error") {
+                $('#rp_cuenta_mensaje_error').html(
+                    `<div class="alert alert-danger alert-block shadow">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>`+respuesta.message+`</strong>
+                    </div>`
+                )
+            }else{
+                $('#rp_cuenta_mensaje').html(
                     `<div class="alert alert-success alert-block shadow">
                             <button type="button" class="close" data-dismiss="alert">×</button>
                                 <strong>Se ha eliminado el registro</strong>
                         </div>`
                 )
-            });
+            }
         }
     });
 }

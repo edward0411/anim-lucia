@@ -16,8 +16,8 @@ use App\Models\Contratos_pads_convenios as pads_convenios;
 
 class CdrController extends Controller
 {
-    //
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $anio = $request->vigencia ?? now()->year;
 
         $cdrs = cdr_saldo::orderBy('id','desc')
@@ -28,33 +28,27 @@ class CdrController extends Controller
             $cdrs_vigencias[] = $i;
         }
 
-
         return view('cdr.index',compact('cdrs','cdrs_vigencias', 'anio'));
     }
 
-    public function crear(){
-
+    public function crear()
+    {
         $action = 1;
-
         $fecha = Carbon::now()->parse()->format('Y-m-d');
-
         return view('cdr.crear',compact('fecha','action'));
     }
-    public function editar($id){
 
+    public function editar($id)
+    {
         $cdr = cdr::where('id',$id)->select('id','objeto_cdr')->first();
-
         $action = 2;
-
         $fecha = Carbon::now()->parse()->format('Y-m-d');
 
-        return view('cdr.crear',compact('fecha','action','cdr'));
-       
+        return view('cdr.crear',compact('fecha','action','cdr'));     
     }
 
-    public function store(Request $request){
-        
-
+    public function store(Request $request)
+    {
         $registro = new cdr();
 
         $registro->fecha_registro_cdr = $request->fecha;
@@ -62,49 +56,50 @@ class CdrController extends Controller
         $registro->created_by = Auth::user()->id;
         $registro->save();
 
-
         return redirect()->route('cdr.index')->with('success','Información guardada de forma exitosa');
     }
 
-    public function update(Request $request){
-        
-
+    public function update(Request $request)
+    {
         $registro =  cdr::where('id',$request->id_cdr)->firstOrFail();
-
       
         $registro->objeto_cdr = $request->objecto_cdr;
         $registro->updated_by = Auth::user()->id;
         $registro->save();
 
-
         return redirect()->route('cdr.index')->with('success','Información actualizada de forma exitosa');
     }
 
-    public function delete(Request $request){
-        
+    public function delete(Request $request)
+    {
+        $registro =  cdr::find($request->id_cdr);
 
-        $registro =  cdr::where('id',$request->id_cdr)->firstOrFail();
-        $registro->deleted_by = Auth::user()->id;
-        $registro->save();
+        if(count($registro->Cdr_rps) == 0){
+            if(count($registro->Cdr_cuentas) == 0){
 
-       
-        
-        $informacionlog = 'Se ha eliminado la informacion del movimiento';
-        $objetolog = [
-                'user_id' => Auth::user()->id,
-                'user_email' => Auth::user()->mail,
-                'Objeto Eliminado' => $registro,
-                ];                
+                $registro->deleted_by = Auth::user()->id;
+                $registro->save();
 
-        Log::channel('database')->info( 
-            $informacionlog ,
-            $objetolog
-        );
+                $informacionlog = 'Se ha eliminado la informacion del movimiento';
+                $objetolog = [
+                        'user_id' => Auth::user()->id,
+                        'user_email' => Auth::user()->mail,
+                        'Objeto Eliminado' => $registro,
+                        ];                
 
+                Log::channel('database')->info( 
+                    $informacionlog ,
+                    $objetolog
+                );
 
-        $registro->delete();
-
-        return redirect()->route('cdr.index')->with('success','Información ha sido eliminada de forma exitosa');
+                $registro->delete();
+                return redirect()->route('cdr.index')->with('success','Información ha sido eliminada de forma exitosa');
+            }else{
+                return redirect()->route('cdr.index')->with('error','El CDR '.$registro->id.' no puede ser eliminado por tener cuentas relacionadas');
+            }
+        }else{
+            return redirect()->route('cdr.index')->with('error','El CDR '.$registro->id.' no puede ser eliminado por tener RPs activos');
+        }
     }
 
     public function reporte($id)

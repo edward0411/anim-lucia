@@ -15,7 +15,7 @@ class Cdrs extends Model
 
     public function Cdr_cuentas()
     {
-        return $this->hasMany('App\Models\Cdr_cuentas', 'id_cdr' );
+        return $this->hasMany('App\Models\Cdrs_cuentas', 'id_cdr');
     }
 
     public function Cdr_rps()

@@ -81,6 +81,7 @@ $vars=[ 'breadcrum' => ['Financiero','CDR','Compromisos','Cuentas-Compromiso','O
                 <h3 class="card-title">Relación de Obligaciones APF</h3>
             </div>
             <div class="card-body">
+                <div id="obl_operacion_mensaje_error"> </div>
                     <table id="tbl_obligaciones_pagos" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -348,16 +349,23 @@ function deletesCell_obl_operacion(id) {
        url: url,
        data: datos,
        success: function(respuesta) {
-           $.each(respuesta, function(index, elemento) {1
-               traerPagos();
-               consultarValores();
-                   $('#obl_operacion_mensaje').html(
-                       `<div class="alert alert-success alert-block shadow">
-                           <button type="button" class="close" data-dismiss="alert">×</button>
-                               <strong>Se ha eliminado el registro</strong>
-                       </div>`
-                   )
-               });
+            traerPagos();
+            consultarValores();
+            if (respuesta.status == "error") {
+                    $('#obl_operacion_mensaje_error').html(
+                    `<div class="alert alert-danger alert-block shadow">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                            <strong>`+respuesta.message+`</strong>
+                    </div>`
+                    )
+                }else{
+                    $('#obl_operacion_mensaje').html(
+                        `<div class="alert alert-success alert-block shadow">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>Se ha eliminado el registro</strong>
+                        </div>`
+                    )
+                } 
            }
        });
    }

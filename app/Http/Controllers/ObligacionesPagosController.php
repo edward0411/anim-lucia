@@ -19,14 +19,14 @@ use App\Models\Terceros_cuentas_bancarias as terceros_cuentas_bancarias;
 class ObligacionesPagosController extends Controller
 {
 
-    public function index(Request $request){
-
+    public function index(Request $request)
+    {
         $relacion = rp_cuenta::find($request->id);
-
         return view('cdr.rps.cuentas.obligaciones_pagos.index',compact('relacion'));
     }
 
-    public function rp_cuenta_pagos_store(Request $request){
+    public function rp_cuenta_pagos_store(Request $request)
+    {
 
         $rules = [
             'valor_operacion' => 'required',
@@ -134,8 +134,8 @@ class ObligacionesPagosController extends Controller
           return response()->json($respuesta);
     }
 
-    public function get_info_rp_cuenta_pagos(Request $request){
-
+    public function get_info_rp_cuenta_pagos(Request $request)
+    {
         $registro = obl_operaciones::where('id_rp_cuenta',$request->id_rp_cuenta)
         ->select('id','fecha_obl_operacion','valor_operacion_obl','observaciones','param_estado_obl_operacion_valor','param_estado_obl_operacion_text','apf')
         ->get();
@@ -149,34 +149,39 @@ class ObligacionesPagosController extends Controller
         }
 
         return response()->json($registro);
-
     }
 
-    public function rp_cuenta_pagos_delete(Request $request){
-
+    public function rp_cuenta_pagos_delete(Request $request)
+    {
         $rp_cuenta_pago = obl_operaciones::find($request->id_rp_cuenta_pago);
-        $rp_cuenta_pago->deleted_by = Auth::user()->id;
-        $rp_cuenta_pago->save();
 
-        $informacionlog = 'Se ha eliminado la informacion del movimiento';
-        $objetolog = [
-                'user_id' => Auth::user()->id,
-                'user_email' => Auth::user()->mail,
-                'Objeto Eliminado' => $rp_cuenta_pago,
-                ];
+        if(count($rp_cuenta_pago->Endoso) == 0){
 
-        Log::channel('database')->info(
-            $informacionlog ,
-            $objetolog
-        );
+            $rp_cuenta_pago->deleted_by = Auth::user()->id;
+            $rp_cuenta_pago->save();
 
-        $rp_cuenta_pago->delete();
+            $informacionlog = 'Se ha eliminado la informacion del movimiento';
+            $objetolog = [
+                    'user_id' => Auth::user()->id,
+                    'user_email' => Auth::user()->mail,
+                    'Objeto Eliminado' => $rp_cuenta_pago,
+                    ];
 
-        // $info_contra = informacion_contractuals::all();
-        $respuesta['status']="success";
-        $respuesta['message']="Se ha eliminado registro";
-        $respuesta['objeto']=$rp_cuenta_pago;
+            Log::channel('database')->info(
+                $informacionlog ,
+                $objetolog
+            );
 
+            $rp_cuenta_pago->delete();
+            $respuesta['status']="success";
+            $respuesta['message']="Se ha eliminado registro";
+            $respuesta['objeto']=$rp_cuenta_pago;
+            
+        }else{
+            $respuesta['status']="error";
+            $respuesta['message'] = "La obligación N° ".$rp_cuenta_pago->id." no puede ser eliminada por que ya tiene beneficiarios creados.";
+            $respuesta['objeto']= $rp_cuenta_pago;
+        }
         return response()->json($respuesta);
     }
 
@@ -197,8 +202,8 @@ class ObligacionesPagosController extends Controller
         return response()->json($valores);
     }
 
-    public function rp_cuenta_pagos_change_state(Request $request){
-
+    public function rp_cuenta_pagos_change_state(Request $request)
+    {
         $id_obl = $request->id_obl;
         $consulta = obl_operaciones::where('id',$id_obl)->select('param_estado_obl_operacion_valor')->first();
         $valor = $consulta->param_estado_obl_operacion_valor + 1;
@@ -216,11 +221,9 @@ class ObligacionesPagosController extends Controller
         return response()->json($respuesta);
     }
 
-    public function reporte_obl(Request $request){
-
-        
+    public function reporte_obl(Request $request)
+    {
         $id_obligacion = $request->id;
-
         $fecha = Carbon::now()->format('Y-m-d');
 
         $obligacion = obl_operaciones::where('obl_operaciones.id',$id_obligacion)
@@ -331,7 +334,8 @@ class ObligacionesPagosController extends Controller
        
     }
 
-    public function archivo_plano_obl(Request $request){
+    public function archivo_plano_obl(Request $request)
+    {
         $id_obligacion = $request->id;
     }
 

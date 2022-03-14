@@ -343,9 +343,10 @@ var cell = `
          @can('modulo_financiero.gestion_cdr.rps.cuentas.pagos.endoso.editar')
              <button type="button" class="btn btn-sm btn-outline-primary" onclick="EditCell_Endoso(`+id+`)">Editar</button>
          @endcan
+         <!-- Se oculta el boton segun tarjeta de actualización en trello n° 32 Financiero 2 13-03-2022 
          @can('modulo_financiero.gestion_cdr.rps.cuentas.pagos.endoso.eliminar')
              <button type="button" class="btn btn-sm btn-outline-danger" onclick="deletesCell_Endoso(`+id+`)">Eliminar</button>
-         @endcan
+         @endcan-->
      </td>
   </tr>
 `;
