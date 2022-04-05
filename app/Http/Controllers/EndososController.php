@@ -17,21 +17,16 @@ class EndososController extends Controller
 {
     //
 
-    public function index(Request $request){
-
+    public function index(Request $request)
+    {
         $id_relacion = obl_operaciones::where('id',(int)$request->id)->first();
-
         $relacion = rp_cuenta::where('id',$id_relacion->id_rp_cuenta)->first();
 
         $id_rp = $relacion->id_rp;
         $id_cuenta = $id_relacion->id_rp_cuenta;
-
         $rp = cdr_rp::find($id_rp);
-
         $tercero_original = $rp->terceros()->select('id','nombre','identificacion')->get();
-
         $terceros = terceros::all();
-
         $forma_pago = parametricas::where('categoria','=','Financiero.cdr.rp.pago.endoso.forma_pago')->select('valor','texto')->get();
         $tipo_giro = parametricas::where('categoria','=','Financiero.cdr.rp.pago.endoso.tipo_giro')->select('valor','texto')->get();
 
@@ -40,20 +35,17 @@ class EndososController extends Controller
 
     public function endosos_store(Request $request){
 
-            $rules['tipo_endoso'] = 'required';   
-            $messages['tipo_endoso.required'] ='Favor seleccione un tipo de tercero.'; 
-
-            if($request->tipo_endoso == 0){
-                $rules['tipo_endoso2'] = 'required';   
-                $messages['tipo_endoso2.required'] ='Favor seleccione un tipo de tercero.'; 
-            }
+        $rules['tipo_endoso'] = 'required';   
+        $messages['tipo_endoso.required'] ='Favor seleccione un tipo de tercero.'; 
+        if($request->tipo_endoso == 0){
+            $rules['tipo_endoso2'] = 'required';   
+            $messages['tipo_endoso2.required'] ='Favor seleccione un tipo de tercero.'; 
+        }
         if ($request->valor_endoso > $request->pendiente_pago) {
             $rules['tipo_endoso3'] = 'required';
             $messages['tipo_endoso3.required'] ='El valor de la operación no puede superar el valor pendiente por pagar.';
         }
-
         $this->validate($request, $rules, $messages);
-
         $registro = endoso::find($request->id_endoso);  
         
         if($registro == null )

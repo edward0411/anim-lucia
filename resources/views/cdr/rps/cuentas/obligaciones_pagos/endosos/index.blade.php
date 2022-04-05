@@ -370,11 +370,11 @@ function traerEndosos(){
     success: function(respuesta) {
 
         $("#tbl_endoso_pagos tbody").empty();
-        var total_pago_rp = $("#pendiente_pago_old").val();
+        var total_pago_rp = parseFloat($("#pendiente_pago_old").val());
 
         $.each(respuesta, function(index, elemento) {
             adicionarEndoso(elemento.id, elemento.nombre_tercero ?? '', elemento.valor_endoso ?? '',elemento.id_param_tipo_giro_text ?? '',elemento.id_param_forma_pago_text ?? '',elemento.factura ?? '',elemento.comentarios ?? '',elemento.instrucciones_adicionales ?? '',elemento.ciudad_tributacion ?? '',elemento.cuenta ?? '')
-            total_pago_rp = total_pago_rp - elemento.valor_endoso;
+            total_pago_rp = parseFloat(total_pago_rp).toFixed(2) - parseFloat(elemento.valor_endoso);
             });
             $("#pendiente_pago").val(total_pago_rp);
             colleccionEndosos = respuesta;
@@ -384,12 +384,17 @@ function traerEndosos(){
 
 function EditCell_Endoso(id)
  {
-
     datos = $.grep(colleccionEndosos, function( n, i ) {
     return n.id===id;
     });
 
-    var nuevo_disp = parseInt($('#pendiente_pago').val()) + parseInt(datos[0].valor_endoso);
+    var var1 = 0;
+    var var2 = 0;
+
+    var1 = parseFloat($('#pendiente_pago').val());
+    var2 =  parseFloat(datos[0].valor_endoso).toFixed(2);
+
+    var nuevo_disp = var1 + var2;
 
 
     if(datos[0].tipo_endoso == 1){

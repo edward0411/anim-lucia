@@ -85,17 +85,8 @@
 
 <script type="text/javascript">
 
-function llenarTerceros(name) {
-    var valor = $('#'+name).val()
 
-    $('#id_'+name).val($('#browsersTerceros [value="' + valor + '"]').data('value'))
 
-    console.log(valor);
-
-    //var id_tercero=$('#id_contratista').val();
-    //traerinfoterceros(id_tercero);
-
-    }
   </script>
 
 
